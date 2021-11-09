@@ -1,0 +1,31 @@
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    margin: 15px 0;
+}
+
+.radio-button {
+    margin: 5px;
+}
+
+.task-title {
+    margin: 2rem;
+}
+
+.msg {
+    margin: 1rem;
+    font-weight: 800;
+    background: green;
+    text-align: center;
+}
+
+.wrong-answer {
+    background: red;
+}
+

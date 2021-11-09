@@ -1,0 +1,48 @@
+<div class="content">
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav #drawer class="sidenav" style="top: 64px;" fixedInViewport
+          [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+          [mode]="(isHandset$ | async) ? 'over' : 'side'"
+          [opened]="(isHandset$ | async) === false">
+        <mat-toolbar>Menu</mat-toolbar>
+        <mat-nav-list>
+    
+            <div class="nav-content" *ngFor="let item of navData">
+                <mat-divider></mat-divider>
+                <h4 class="section-title">{{item.sectionTitle}}</h4>
+                <div class="chapter" *ngFor="let chapter of item.chapters">
+                  <a (click)="onClickChupterLinkHandler(chapter.id)" class="chapter-link" [ngClass]="{'active-link': chapterId == chapter.id}" routerLinkActive="active-link"  mat-list-item [routerLink]="['/tutorial', currentTutorialName]" [queryParams]="{chapterId: chapter.id, sectionTitle: sectionTitle}">{{chapter.chapterTitle}}</a>
+                  <mat-divider></mat-divider>
+                </div>
+              </div>
+    
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content >
+        <mat-toolbar color="accent">
+          <button
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="drawer.toggle()"
+            *ngIf="isHandset$ | async">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+    
+          <nav mat-tab-nav-bar color="primary">
+            <a mat-tab-link *ngFor="let link of links"
+           (click)="onClickSectionLinkHandler(link.sectionRouteTitle)"
+           [active]="sectionTitle == link.sectionRouteTitle"
+           class="section-link" [ngClass]="{'active-link': sectionTitle == link.sectionRouteTitle}" routerLinkActive="active-link" mat-list-item [routerLink]="[ '/tutorial', currentTutorialName]"
+           [queryParams]="{chapterId: chapterId, sectionTitle: link.sectionRouteTitle}"
+           > {{link.linkTitle}} </a>
+          </nav>
+        </mat-toolbar>
+        <app-theory-section [theoryData]="theoryData" *ngIf="sectionTitle === 'theory'"></app-theory-section>
+        <app-tests-section [testsData]="testsData" *ngIf="sectionTitle === 'tests'"></app-tests-section>
+        <app-practice-section [practiceData]="practiceData" *ngIf="sectionTitle === 'practice'"></app-practice-section>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+    
+  </div>
+  

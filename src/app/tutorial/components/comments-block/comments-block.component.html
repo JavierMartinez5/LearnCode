@@ -1,0 +1,143 @@
+<section>
+  <div class="btn-container">
+    <mat-button-toggle-group [(ngModel)]="inputMode" aria-label="Font Style">
+      <mat-button-toggle value="comment" (click)="hideInput('comment')"
+        >Додати коментарій
+        <mat-icon>{{
+          isCreateCommentBlock
+            ? "keyboard_double_arrow_up"
+            : "keyboard_double_arrow_down"
+        }}</mat-icon></mat-button-toggle
+      >
+      <mat-button-toggle value="search" (click)="hideInput('search')"
+        >Пошук коментарів
+        <mat-icon>{{
+          isSearchCommentBlock
+            ? "keyboard_double_arrow_up"
+            : "keyboard_double_arrow_down"
+        }}</mat-icon></mat-button-toggle
+      >
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="input-container" *ngIf="inputMode">
+    <mat-form-field appearance="legacy" *ngIf="inputMode === 'search'">
+      <mat-label>Пошук коментарів за їх контентом або заголовком</mat-label>
+      <mat-icon matSuffix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Наприклад: two way binding"
+        [(ngModel)]="searchValue"
+      />
+    </mat-form-field>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="content" *ngIf="inputMode === 'comment'">
+        <mat-form-field appearance="legacy">
+          <mat-label>Заголовок або короткий опис</mat-label>
+          <mat-icon matSuffix>title</mat-icon>
+          <input
+            type="text"
+            formControlName="title"
+            matInput
+            placeholder="Наприклад: Чому для training_set використовується fit_transform() ?"
+          />
+          <mat-error
+            *ngIf="form.get('title')?.invalid && form.get('title')?.touched"
+          >
+            <small *ngIf="form.get('title')?.errors?.required"
+              >Поле для заголовку не може бути порожнім</small
+            >
+          </mat-error>
+          <mat-error *ngIf="form.get('title')?.errors?.minlength">
+            Довжина заголовку повинна бути
+            {{ form.get("title")?.errors?.minlength?.requiredLength }} симфолів.
+            Зараз введено
+            {{ form.get("title")?.errors?.minlength?.actualLength }}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-control">
+          <label>Дитальний опис (необов'язково)</label>
+          <quill-editor
+            formControlName="content"
+            placeholder="Напишіть свій коментар тут"
+          ></quill-editor>
+          <mat-error
+            *ngIf="form.get('content')?.invalid && form.get('content')?.touched"
+          >
+            <small *ngIf="form.get('content')?.errors?.required"
+              >Поле дитального опису не може бути порожнім</small
+            >
+          </mat-error>
+        </div>
+        <div class="btn-container">
+          <button mat-raised-button type="submit" [disabled]="form.invalid">
+            Опублікувати
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section>
+  <div *ngFor="let comment of comments | filterComments: searchValue">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div
+          mat-card-avatar
+          class="example-header-image"
+          style="background-image: url('{{ comment.userData.img }}');"
+        ></div>
+        <mat-card-subtitle>{{ comment.userData.nickName }}</mat-card-subtitle>
+        <mat-card-title>{{ comment.title }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <quill-view-html [content]="comment.content"></quill-view-html>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="btn-container flex">
+          <div class="flex">
+            <div class="btn-section">
+              <button
+                mat-mini-fab
+                aria-label="Example icon button with a home icon"
+              >
+                <mat-icon>thumb_up</mat-icon>
+              </button>
+              <span class="statistic">{{ comment.likes }}</span>
+            </div>
+            <div class="btn-section">
+              <button
+                mat-mini-fab
+                aria-label="Example icon button with a home icon"
+              >
+                <mat-icon>thumb_down</mat-icon>
+              </button>
+              <span class="statistic">{{ comment.dislikes }}</span>
+            </div>
+          </div>
+
+          <div>
+            <button mat-stroked-button>Відповісти</button>
+            <button mat-button>
+              <span>Поскаржитись</span><mat-icon>flag</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div
+    class="empty-comments flex"
+    *ngIf="!(comments | filterComments: searchValue).length"
+  >
+    <h3>
+      За запитом <span class="highlight">{{ searchValue }}</span> не знайдено
+      жодного коментаря
+    </h3>
+  </div>
+</section>

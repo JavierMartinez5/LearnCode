@@ -1,0 +1,138 @@
+<div class="modal-container">
+  <h3 mat-dialog-title class="modal-header">Edit tutorial block</h3>
+  <div mat-dialog-content>
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Edit block title </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+          <input
+            [(ngModel)]="blockName"
+            type="text"
+            matInput
+            #text
+            maxlength="30"
+            placeholder="Ex. Basic overview..."
+          />
+          <mat-label>Block title</mat-label>
+          <mat-hint align="end">{{ text.value.length }} / 30</mat-hint>
+        </mat-form-field>
+      </mat-expansion-panel>
+      <mat-expansion-panel [disabled]="!blockName">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Edit chapters</mat-panel-title>
+          <mat-panel-description>
+            <span>Edit name, change order, delete.</span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="flex content-center mb-1">
+          <mat-slide-toggle [(ngModel)]="isDragAndDrop">Drag and drop mode is: {{isDragAndDrop ? 'ON' : 'OFF'}}</mat-slide-toggle>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div *ngIf="isDragAndDrop; else dragAndDropOff" cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+          <mat-list class="modal-mat-list cursor-grab" *ngFor="let chapter of chapters; let i = index" cdkDrag role="list">
+            <div class="flex" >
+              <div class="flex" *ngIf="chapter.id !== currentChapterId; else chapterBlock">
+                <div class="btn-container flex">
+                  <button (click)="openEditInput(chapter.id, 'edit')" class="edit-btn mini-btn" mat-icon-button color="accent">
+                    <mat-icon class="mini-icon">edit</mat-icon>
+                  </button>
+                  <button (click)="openEditInput(chapter.id, 'delete')" class="delete-btn mini-btn" mat-icon-button color="warn">
+                    <mat-icon class="mini-icon">delete</mat-icon>
+                  </button>
+                </div>
+                <mat-list-item role="listitem">{{chapter.chapterTitle}}</mat-list-item>
+              </div>
+              <ng-template #chapterBlock>
+                <div class="flex w100" *ngIf="chapterEditMood === 'edit'">
+                  <mat-form-field >
+                    <input
+                      [(ngModel)]="chapters[i].chapterTitle"
+                      type="text"
+                      matInput
+                      #text
+                      maxlength="30"
+                      placeholder="Ex. Arrays and..."
+                    />
+                    <mat-label>Chapter with title {{chapter.chapterTitle}}</mat-label>
+                    <mat-hint align="end">{{ text.value.length }} / 30</mat-hint>
+                  </mat-form-field>
+                  <button (click)="currentChapterId = ''" class="delete-btn mini-btn" mat-icon-button>
+                    <mat-icon class="mini-icon">close</mat-icon>
+                  </button>
+                </div>
+  
+                <div class="flex w100  clumn" *ngIf="chapterEditMood === 'delete'">
+                  <p class="delete-text">Delete chapter <span class="text-red">{{chapter.chapterTitle}}</span> ?</p>
+                  <div class="flex content-center">
+                    <button style="margin-right: 1rem;" (click)="deleteChapter(chapter)" mat-raised-button color="warn" >Delete chapter</button>
+                    <button (click)="currentChapterId = ''" mat-button>Cancel</button>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </div>
+
+        <ng-template #dragAndDropOff>
+          <mat-list class="modal-mat-list" *ngFor="let chapter of chapters; let i = index" role="list">
+          
+            <div class="flex" >
+              <div class="flex" *ngIf="chapter.id !== currentChapterId; else chapterBlock">
+                <div class="btn-container flex">
+                  <button (click)="openEditInput(chapter.id, 'edit')" class="edit-btn mini-btn" mat-icon-button color="accent">
+                    <mat-icon class="mini-icon">edit</mat-icon>
+                  </button>
+                  <button (click)="openEditInput(chapter.id, 'delete')" class="delete-btn mini-btn" mat-icon-button color="warn">
+                    <mat-icon class="mini-icon">delete</mat-icon>
+                  </button>
+                </div>
+                <mat-list-item role="listitem">{{chapter.chapterTitle}}</mat-list-item>
+              </div>
+              <ng-template #chapterBlock>
+                <div class="flex w100" *ngIf="chapterEditMood === 'edit'">
+                  <mat-form-field >
+                    <input
+                      [(ngModel)]="chapters[i].chapterTitle"
+                      type="text"
+                      matInput
+                      #text
+                      maxlength="30"
+                      placeholder="Ex. Arrays and..."
+                    />
+                    <mat-label>Chapter with title {{chapter.chapterTitle}}</mat-label>
+                    <mat-hint align="end">{{ text.value.length }} / 30</mat-hint>
+                  </mat-form-field>
+                  <button (click)="currentChapterId = ''" class="delete-btn mini-btn" mat-icon-button>
+                    <mat-icon class="mini-icon">close</mat-icon>
+                  </button>
+                </div>
+  
+                <div class="flex w100  clumn" *ngIf="chapterEditMood === 'delete'">
+                  <p class="delete-text">Delete chapter <span class="text-red">{{chapter.chapterTitle}}</span> ?</p>
+                  <div class="flex content-center">
+                    <button style="margin-right: 1rem;" (click)="deleteChapter(chapter)" mat-raised-button color="warn" >Delete chapter</button>
+                    <button (click)="currentChapterId = ''" mat-button>Cancel</button>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </ng-template>
+        
+        
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div mat-dialog-actions class="space-betweet">
+    <button [mat-dialog-close]="submit()" mat-raised-button>Submit</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</div>

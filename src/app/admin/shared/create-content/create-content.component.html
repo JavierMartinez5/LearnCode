@@ -1,0 +1,79 @@
+<div class="create-content">
+  <div *ngIf="createdContent.length">
+    <div class="sub-section" *ngFor="let subSection of createdContent">
+      <div class="content-text" *ngIf="subSection.type === 'text'">
+        <quill-view-html [content]="subSection.content"></quill-view-html>
+      </div>
+
+      <div class="content-code" *ngIf="subSection.type === 'code'">
+        <pre><code [highlight]="subSection.content" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentTool">
+    <div *ngIf="currentTool === 'text'">
+      <quill-editor
+        placeholder="Поле для контенту"
+        [(ngModel)]="currentContent"
+      ></quill-editor>
+    </div>
+
+    <div *ngIf="currentTool === 'code'">
+      <div style="height: 250px">
+        <ngx-monaco-editor
+          style="height: 100%"
+          class="my-code-editor"
+          [options]="editorOptions"
+          [(ngModel)]="currentContent"
+        ></ngx-monaco-editor>
+      </div>
+    </div>
+
+    <div class="flex content-center mt-2">
+      <div>
+        <button (click)="createBlock()" mat-raised-button>Create block</button>
+      </div>
+      <div class="ml-1">
+        <button (click)="cancelCreateBlock()" mat-stroked-button >Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!currentTool" class="flex content-center mt-2">
+    <div>
+      <button (click)="currentTool = 'text'" mat-stroked-button >
+        Create text block <mat-icon>ballot</mat-icon>
+      </button>
+    </div>
+    <div class="ml-1">
+      <button (click)="currentTool = 'code'" mat-stroked-button >
+        Create code block <mat-icon>integration_instructions</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!currentTool && createdContent.length" class="flex mt-2 clumn">
+    <div class="m0auto text-center">
+      <label id="radio-group-label">Place in :</label>
+      <div class="modal-radio-group">
+        <mat-radio-group [(ngModel)]="position" aria-label="Select an option" aria-labelledby="radio-group-label">
+          <mat-radio-button value="bottom">bottom</mat-radio-button>
+          <mat-radio-button class="ml-1" value="top">top</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+    <div class="flex content-center mt-1">
+      <div>
+        <button class="c-green" (click)="finishCreation()" mat-stroked-button>
+          Submit<mat-icon>note_add</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1">
+        <button (click)="finishCreation(true)" mat-stroked-button color="warn">
+          Cancel <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

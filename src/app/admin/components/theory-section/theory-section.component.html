@@ -1,0 +1,194 @@
+<div class="section-container">
+  <div class="col-1 theory-col-1">
+    
+    <div class="dashboard-container flex v-center">
+      <div>
+        <button
+          (click)="addContent()"
+          mat-raised-button
+          color="primary"
+          class="add-section"
+        >
+          Create content <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1 flex">
+        <button  mat-mini-fab (click)="isDragAndDrop = !isDragAndDrop">
+          <mat-icon>{{ isDragAndDrop ? "shuffle_on" : "shuffle" }}</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1 flex">
+        <button class="save-btn" [disabled]="!isChanges"  mat-mini-fab (click)="isSaveChangesBlockOpen = !isSaveChangesBlockOpen">
+          <mat-icon >save</mat-icon>
+          
+        </button>
+      </div>
+      <div class="ml-auto flex">
+        <button (click)="deleteAllContent()" mat-icon-button color="warn">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      
+    </div>
+
+    <div [@fade] class="alert-changes" *ngIf="isSaveChangesBlockOpen">
+      <div class="flex h-end height-15px">
+        <button (click)="isSaveChangesBlockOpen = false" mat-icon-button color="warn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="text-center flex content-center v-center">
+        <p><strong>Save changes on this page?</strong></p>
+      </div>
+      
+      <div class="flex content-center mb-1">
+        <div>
+          <button  (click)="saveChanges()" mat-stroked-button class="c-green">
+            Yes
+          </button>
+        </div>
+        <div class="ml-1">
+          <button
+          (click)="removeChanges()"
+          mat-stroked-button
+          color="warn"
+          >
+          Remove all changes
+          </button>
+        </div>
+
+        
+      </div>
+      <!-- <mat-divider class="mb-2"></mat-divider> -->
+    </div>
+    
+
+    <app-create-content [@fade] *ngIf="isCreateContentOpen" (onCreateContent)="onCreateContent($event)"></app-create-content>
+    
+    <div *ngIf="!isDragAndDrop; else offDragAndDropTemplate">
+      <div [@fade] class="mt-2 ">
+        <div class="section" *ngFor="let section of dataWithChanges; let sectionIdx=index">
+          <mat-divider></mat-divider>
+          <div class="btn-container flex">
+            <button (click)="addContentInSection(sectionIdx)" class="edit-btn mini-btn" mat-icon-button color="primary">
+              <mat-icon class="mini-icon">add_box</mat-icon>
+            </button>
+            <button (click)="editSection(sectionIdx)" class="edit-btn mini-btn" mat-icon-button color="accent">
+              <mat-icon class="mini-icon">edit</mat-icon>
+            </button>
+            <button (click)="deleteSection(sectionIdx)" class="delete-btn mini-btn" mat-icon-button color="warn">
+              <mat-icon class="mini-icon">delete</mat-icon>
+            </button>
+          </div>
+
+          <div [ngClass]="{'currentEditSection': currentEditSectionIdx === numbToStr(sectionIdx)}" class="sub-section" *ngFor="let subSection of section; let subSectionIdx=index">
+            <div class="h-end flex" *ngIf="currentEditSectionIdx === numbToStr(sectionIdx)">
+              <button (click)="editSubSection(subSectionIdx)" class="edit-btn mini-btn" mat-icon-button color="accent" [color]="currentEditSubSectionIdx === numbToStr(subSectionIdx) ? 'warn' : 'accent'">
+                <mat-icon class="mini-icon">{{currentEditSubSectionIdx === numbToStr(subSectionIdx) ? 'close' : 'edit'}}</mat-icon>
+              </button>
+              <button (click)="deleteSubSection(subSectionIdx)" class="delete-btn mini-btn" mat-icon-button color="warn">
+                <mat-icon class="mini-icon">delete</mat-icon>
+              </button>
+            </div>
+
+            <div *ngIf="currentEditSectionIdx === numbToStr(sectionIdx); else elseSectionsBlock">
+              <div *ngIf="currentEditSubSectionIdx !== numbToStr(subSectionIdx); else editSubSectionBlock">
+                <div class="content-text" *ngIf="subSection.type === 'text'">
+                  <quill-view-html [content]="subSection.content"></quill-view-html>
+                </div>
+        
+                <div class="content-code" *ngIf="subSection.type === 'code'">
+                  <pre><code [highlight]="subSection.content" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+                </div>
+              </div>
+
+              <ng-template #editSubSectionBlock>
+                <div>
+                  <div class="content-text" *ngIf="subSection.type === 'text'">
+                    <quill-editor
+                      placeholder="Поле для контенту"
+                      [(ngModel)]="currentEddetingContent"
+                    ></quill-editor>
+                  </div>
+          
+                  <div class="content-code" *ngIf="subSection.type === 'code'">
+                    <div style="height: 250px">
+                      <ngx-monaco-editor
+                        style="height: 100%"
+                        class="my-code-editor"
+                        [options]="editorOptions"
+                        [(ngModel)]="currentEddetingContent"
+                      ></ngx-monaco-editor>
+                    </div>
+                  </div>
+  
+                  <div class="flex content-center mt-2 mb-1">
+                    <div>
+                      <button (click)="finishEdittingSubSection()" mat-raised-button>Create block</button>
+                    </div>
+                    <div class="ml-1">
+                      <button (click)="cancelEdittingSubSection()" mat-stroked-button >Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+
+            <ng-template #elseSectionsBlock>
+              <div>
+                <div class="content-text" *ngIf="subSection.type === 'text'">
+                  <quill-view-html [content]="subSection.content"></quill-view-html>
+                </div>
+        
+                <div class="content-code" *ngIf="subSection.type === 'code'">
+                  <pre><code [highlight]="subSection.content" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #offDragAndDropTemplate>
+      <div class="mt-2 example-list" [@fade] cdkDropList (cdkDropListDropped)="drop($event)">
+        <div cdkDrag class="section drag-and-drop modal-mat-list cursor-grab" *ngFor="let section of dataWithChanges">
+          <div class="sub-section" *ngFor="let subSection of section">
+            <div class="content-text" *ngIf="subSection.type === 'text'">
+              <quill-view-html [content]="subSection.content"></quill-view-html>
+            </div>
+    
+            <div class="content-code" *ngIf="subSection.type === 'code'">
+              <pre><code [highlight]="subSection.content" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    
+  </div>
+
+  <div class="col-2">
+    <div class="col-2-container">
+      <h4>Overview Content</h4>
+      <nav>
+        <a href="#">Умовне розгалуження: if, '?'</a>
+        <a href="#">Інструкція «if»</a>
+        <a href="#">Перетворення до логічного типу</a>
+        <a href="#">Блок «else»</a>
+        <a href="#">«else if»</a>
+        <a href="#">Кілька умов: «else if»</a>
+        <a href="#">some link</a>
+        <a href="#">some link</a>
+      </nav>
+      <!-- <mat-nav-list>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+         </mat-nav-list> -->
+    </div>
+  </div>
+</div>

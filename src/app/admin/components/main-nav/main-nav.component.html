@@ -1,0 +1,128 @@
+<div class="content">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #drawer
+      class="sidenav"
+      style="top: 64px"
+      fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false"
+    >
+      <mat-toolbar>Menu</mat-toolbar>
+      <button
+        (click)="addNewBlock()"
+        mat-raised-button
+        color="primary"
+        class="add-section"
+      >
+        Create block <mat-icon>add</mat-icon>
+      </button>
+      <button (click)="shuffleBlocks()" class="edit-btn mini-btn" mat-icon-button >
+        <mat-icon class="mini-icon">shuffle</mat-icon>
+      </button>
+      <!-- <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title >
+                Add section
+              </mat-panel-title>
+              
+            </mat-expansion-panel-header>
+            
+            <mat-form-field class="example-full-width" appearance="fill">
+              <mat-label>Message</mat-label>
+              <input matInput #message maxlength="256" placeholder="Ex. I need help with...">
+              <mat-hint align="start"><strong>Don't disclose personal info</strong> </mat-hint>
+              <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+            </mat-form-field>
+
+          </mat-expansion-panel>
+        </mat-accordion> -->
+
+      <mat-nav-list>
+        <div class="nav-content" *ngFor="let item of navData; let i=index">
+          <mat-divider></mat-divider>
+          <h4 class="section-title">
+            {{ item.sectionTitle }}
+            <div class="flex">
+              <button (click)="addChapters(item.id, item.sectionTitle)" class="edit-btn mini-btn" mat-icon-button color="primary">
+                <mat-icon class="mini-icon">add_box</mat-icon>
+              </button>
+              <button (click)="editBlock(item, i)" class="edit-btn mini-btn" mat-icon-button color="accent">
+                <mat-icon class="mini-icon">edit</mat-icon>
+              </button>
+              <button (click)="deleteBlock(item)" class="delete-btn mini-btn" mat-icon-button color="warn">
+                <mat-icon class="mini-icon">delete</mat-icon>
+              </button>
+            </div>
+          </h4>
+          
+          <div class="chapter" *ngFor="let chapter of item.chapters">
+            <a
+              (click)="chapterId = chapter.id"
+              class="chapter-link"
+              [ngClass]="{ 'active-link': chapterId == chapter.id }"
+              routerLinkActive="active-link"
+              mat-list-item
+              [routerLink]="['/admin', 'tutorial', currentTutorialName]"
+              [queryParams]="{
+                chapterId: chapter.id,
+                sectionTitle: sectionTitle
+              }"
+              >{{ chapter.chapterTitle }}</a
+            >
+            <mat-divider></mat-divider>
+          </div>
+        </div>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-toolbar color="accent">
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async"
+        >
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+
+        <nav mat-tab-nav-bar color="primary">
+          <a
+            mat-tab-link
+            *ngFor="let link of links"
+            (click)="onClickSectionLinkHandler(link.sectionRouteTitle)"
+            [active]="sectionTitle == link.sectionRouteTitle"
+            class="section-link"
+            [ngClass]="{
+              'active-link': sectionTitle == link.sectionRouteTitle
+            }"
+            routerLinkActive="active-link"
+            mat-list-item
+            [routerLink]="['/admin', 'tutorial', currentTutorialName]"
+            [queryParams]="{
+              chapterId: chapterId,
+              sectionTitle: link.sectionRouteTitle
+            }"
+          >
+            {{ link.linkTitle }}
+          </a>
+        </nav>
+      </mat-toolbar>
+      <app-theory-section
+        [theoryData]="theoryData"
+        *ngIf="sectionTitle === 'theory'"
+      ></app-theory-section>
+      <app-tests-section
+        [testsData]="testsData"
+        *ngIf="sectionTitle === 'tests'"
+      ></app-tests-section>
+      <app-practice-section
+        [practiceData]="practiceData"
+        *ngIf="sectionTitle === 'practice'"
+      ></app-practice-section>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

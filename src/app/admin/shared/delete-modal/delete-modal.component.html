@@ -1,0 +1,14 @@
+<div class="modal-container">
+    <h3 mat-dialog-title class="modal-header"><strong>Input block name and press Delete</strong></h3>
+    <p class="mw-150px text-red"><strong>Attention!</strong> You are going to delete whole block. If you need to delete only chapters, click on <mat-icon color="accent">edit</mat-icon> (edit button).</p>
+    <mat-form-field>
+        <input [(ngModel)]="inputedBlockName" type="text" matInput #text maxlength="30" placeholder="Ex. Arrays and...">
+        <mat-label>Block name: {{data.blockName}}</mat-label>
+
+        <mat-hint align="end">{{text.value.length}} / 30</mat-hint>
+    </mat-form-field>
+    <div class="space-betweet">
+        <button [mat-dialog-close]="submit()" mat-raised-button color="warn" [disabled]="inputedBlockName !== data.blockName">Delete block</button>
+        <button mat-button mat-dialog-close>Cancel</button>
+    </div>
+</div>

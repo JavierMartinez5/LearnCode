@@ -1,0 +1,30 @@
+.theory-col-1 {
+    padding-top: 50px;
+}
+
+.currentEditSection {
+    border: 2px dashed #FFFF00;
+}
+
+.drag-and-drop {
+    border: 1px dashed gray;
+
+}
+
+
+.alert-changes {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    background: #EEEEEE;
+}
+
+.shaffle-content {
+    background: white;
+}
+
+.save-btn {
+    background: white;
+}

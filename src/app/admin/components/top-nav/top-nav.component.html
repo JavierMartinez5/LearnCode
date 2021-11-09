@@ -1,0 +1,22 @@
+<mat-toolbar class="app-navbar" color="primary">
+  <span>LearnCode</span>
+  <span class="example-spacer"></span>
+
+  <button mat-button [matMenuTriggerFor]="menu" *ngIf="auth.isAuthenticated()">
+    Tutorials <mat-icon>menu_book</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button *ngFor="let tutorialName of tutorialNameList" (click)="navigate(tutorialName)" mat-menu-item>{{tutorialName}}</button>
+  </mat-menu>
+
+  <button (click)="logout()" mat-flat-button color="accent" *ngIf="auth.isAuthenticated(); else loginBtn">
+    Logout <mat-icon>logout</mat-icon>
+  </button>
+
+  <ng-template #loginBtn>
+    <button mat-flat-button color="accent">
+      Login <mat-icon>login</mat-icon>
+    </button>
+  </ng-template>
+  
+</mat-toolbar>

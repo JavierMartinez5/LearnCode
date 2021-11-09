@@ -1,0 +1,41 @@
+<div class="section-container">
+  <div class="col-1 theory-col-1">
+    <div class="section" *ngFor="let section of theoryData">
+      <mat-divider></mat-divider>
+      <div class="sub-section" *ngFor="let subSection of section">
+        <div class="content-text" *ngIf="subSection.type === 'text'">
+          <quill-view-html [content]="subSection.content"></quill-view-html>
+        </div>
+
+        <div class="content-code" *ngIf="subSection.type === 'code'">
+          <pre><code [highlight]="subSection.content" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-2">
+    <div class="col-2-container">
+        <h4>Overview Content</h4>
+        <nav>
+            <a href="#">Умовне розгалуження: if, '?'</a>
+            <a href="#">Інструкція «if»</a>
+            <a href="#">Перетворення до логічного типу</a>
+            <a href="#">Блок «else»</a>
+            <a href="#">«else if»</a>
+            <a href="#">Кілька умов: «else if»</a>
+            <a href="#">some link</a>
+            <a href="#">some link</a>
+        </nav>
+        <!-- <mat-nav-list>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+            <a mat-list-item href="#" >some link</a>
+         </mat-nav-list> -->
+    </div>
+</div>
+</div>

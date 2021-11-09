@@ -1,0 +1,49 @@
+<div class="modal-container">
+  <h3 mat-dialog-title class="modal-header">
+    Add chapters in <span class="text-red">{{ data.blockName }}</span> block
+  </h3>
+  <div mat-dialog-content class="mat-dialog-content">
+    <div>
+      <button
+        (click)="addChapterInputField()"
+        mat-raised-button
+        class="add-input"
+      >
+        Add {{ chapters.length + 1 }}-th chapter
+      </button>
+    </div>
+
+    <div><label id="radio-group-label">Place in :</label></div>
+    <div class="modal-radio-group">
+      <mat-radio-group
+        [(ngModel)]="position"
+        aria-label="Select an option"
+        aria-labelledby="radio-group-label"
+      >
+        <mat-radio-button value="top">top</mat-radio-button>
+        <mat-radio-button value="bottom">bottom</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngFor="let item of chapters; let i = index">
+      <mat-form-field>
+        <input
+          [(ngModel)]="chapters[i].chapterTitle"
+          type="text"
+          matInput
+          #text
+          maxlength="30"
+          placeholder="Ex. Arrays and..."
+        />
+        <mat-label>Input chapter № {{ i + 1 }}</mat-label>
+
+        <mat-hint align="end">{{ text.value.length }} / 30</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="space-betweet">
+    <button [mat-dialog-close]="submit()" mat-raised-button>Submit</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</div>

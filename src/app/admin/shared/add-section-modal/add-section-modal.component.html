@@ -1,0 +1,58 @@
+<div class="modal-container">
+  <h3 mat-dialog-title class="modal-header">Create new tutorial block</h3>
+  <div mat-dialog-content class="mat-dialog-content">
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Create block </mat-panel-title>
+                
+              </mat-expansion-panel-header>
+              
+              <mat-form-field >
+                <input [(ngModel)]="blockName" type="text" matInput #text maxlength="30" placeholder="Ex. Basic overview...">
+                <mat-label>Block name</mat-label>
+                <mat-hint align="end">{{text.value.length}} / 30</mat-hint>
+              </mat-form-field>
+              
+              <div><label id="radio-group-label">Place in :</label></div>
+              <div class="modal-radio-group">
+                <mat-radio-group [(ngModel)]="position" aria-label="Select an option" aria-labelledby="radio-group-label">
+                  <mat-radio-button value="top">top</mat-radio-button>
+                  <mat-radio-button value="bottom">bottom</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            
+            </mat-expansion-panel>
+            <mat-expansion-panel [disabled]="!blockName">
+              <mat-expansion-panel-header>
+                <mat-panel-title>Create chapters</mat-panel-title>
+                <mat-panel-description >
+                    <span>(It's not obligatory)</span>
+                    
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div *ngIf="blockName">
+                <button (click)="addChapterInputField()" mat-raised-button  class="add-input">Add {{chapters.length + 1}}-th chapter in <span class="text-red">{{blockName}}</span> block</button>
+              </div>
+              <div *ngFor="let item of chapters; let i=index">
+                <mat-form-field>
+                    <input [(ngModel)]="chapters[i].chapterTitle" type="text" matInput #text maxlength="30" placeholder="Ex. Arrays and...">
+                    <mat-label>Input chapter № {{i + 1}}</mat-label>
+    
+                    <mat-hint align="end">{{text.value.length}} / 30</mat-hint>
+                  </mat-form-field>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          
+
+ 
+    
+  </div>
+  
+  <div mat-dialog-actions class="space-betweet">
+    <button [mat-dialog-close]="submit()" mat-raised-button>Submit</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</div>
