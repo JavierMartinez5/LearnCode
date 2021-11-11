@@ -11,7 +11,7 @@
                 <mat-divider></mat-divider>
                 <h4 class="section-title">{{item.sectionTitle}}</h4>
                 <div class="chapter" *ngFor="let chapter of item.chapters">
-                  <a (click)="onClickChupterLinkHandler(chapter.id)" class="chapter-link" [ngClass]="{'active-link': chapterId == chapter.id}" routerLinkActive="active-link"  mat-list-item [routerLink]="['/tutorial', currentTutorialName]" [queryParams]="{chapterId: chapter.id, sectionTitle: sectionTitle}">{{chapter.chapterTitle}}</a>
+                  <a (click)="onChapterClick(chapter.id)" class="chapter-link" [ngClass]="{'active-link': chapterId == chapter.id}" routerLinkActive="active-link"  mat-list-item [routerLink]="['/tutorial', currentTutorialName]" [queryParams]="{chapterId: chapter.id, sectionTitle: sectionTitle}">{{chapter.chapterTitle}}</a>
                   <mat-divider></mat-divider>
                 </div>
               </div>
@@ -38,9 +38,12 @@
            > {{link.linkTitle}} </a>
           </nav>
         </mat-toolbar>
-        <app-theory-section [theoryData]="theoryData" *ngIf="sectionTitle === 'theory'"></app-theory-section>
-        <app-tests-section [testsData]="testsData" *ngIf="sectionTitle === 'tests'"></app-tests-section>
-        <app-practice-section [practiceData]="practiceData" *ngIf="sectionTitle === 'practice'"></app-practice-section>
+        <div *ngIf="isDownloading" class="flex content-center v-center" style="height: 300px;">
+          <mat-spinner></mat-spinner>
+        </div>
+        <app-theory-section [theoryData]="theoryData" *ngIf="sectionTitle === 'theory' && theoryData.length"></app-theory-section>
+        <app-tests-section [testsData]="testsData" *ngIf="sectionTitle === 'tests' && testsData.length"></app-tests-section>
+        <app-practice-section [practiceData]="practiceData" *ngIf="sectionTitle === 'practice' && practiceData.length"></app-practice-section>
       </mat-sidenav-content>
     </mat-sidenav-container>
     

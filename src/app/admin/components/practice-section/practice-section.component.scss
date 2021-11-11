@@ -23,6 +23,14 @@
 
 mat-stepper {
     max-width: 100%;
+    box-sizing: border-box;
+    padding-right: 50px;
+}
+
+@media (max-width: 840px) {
+    mat-stepper {
+        padding-right: 0;
+    }
 }
 
 .answer-container {

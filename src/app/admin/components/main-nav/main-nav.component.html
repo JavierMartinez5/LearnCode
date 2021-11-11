@@ -60,7 +60,7 @@
           
           <div class="chapter" *ngFor="let chapter of item.chapters">
             <a
-              (click)="chapterId = chapter.id"
+              (click)="onChapterClick(chapter.id)"
               class="chapter-link"
               [ngClass]="{ 'active-link': chapterId == chapter.id }"
               routerLinkActive="active-link"
@@ -111,17 +111,20 @@
           </a>
         </nav>
       </mat-toolbar>
+      <div *ngIf="isDownloading" class="flex content-center v-center" style="height: 300px;">
+        <mat-spinner></mat-spinner>
+      </div>
       <app-theory-section
         [theoryData]="theoryData"
-        *ngIf="sectionTitle === 'theory'"
+        *ngIf="sectionTitle === 'theory' && theoryData.length"
       ></app-theory-section>
       <app-tests-section
         [testsData]="testsData"
-        *ngIf="sectionTitle === 'tests'"
+        *ngIf="sectionTitle === 'tests' && testsData.length"
       ></app-tests-section>
       <app-practice-section
         [practiceData]="practiceData"
-        *ngIf="sectionTitle === 'practice'"
+        *ngIf="sectionTitle === 'practice' && practiceData.length"
       ></app-practice-section>
     </mat-sidenav-content>
   </mat-sidenav-container>

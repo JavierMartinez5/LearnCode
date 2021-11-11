@@ -83,7 +83,7 @@ mat-stepper {
 }
 
 .col-1 {
-  max-width: 80%;
+  width: 80%;
   display: flex;
   flex-direction: column;
 }
@@ -120,7 +120,7 @@ mat-stepper {
 
 @media (max-width: 840px) {
   .col-1 {
-    max-width: 100%;
+    width: 100%;
     padding: 5px 0 5px 5px;
   }
 

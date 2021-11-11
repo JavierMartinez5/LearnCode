@@ -20,6 +20,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatBadgeModule} from '@angular/material/badge';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterCommentsPipe } from './pipes/filter-comments.pipe';
@@ -56,6 +58,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSlideToggleModule,
     MatBadgeModule,
     DragDropModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
     LayoutModule,
     FormsModule,
     ReactiveFormsModule,
@@ -85,6 +89,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSlideToggleModule,
     DragDropModule,
     MatBadgeModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
     LayoutModule,
     FormsModule,
     ReactiveFormsModule,

@@ -23,6 +23,7 @@ import { DeleteModalComponent } from './shared/delete-modal/delete-modal.compone
 import { ShuffleSectionModalComponent } from './shared/shuffle-section-modal/shuffle-section-modal.component';
 import { ModalsService } from './services/modals.service';
 import { CreateContentComponent } from './shared/create-content/create-content.component';
+import { ShuffleTestsModalComponent } from './components/modals/shuffle-tests-modal/shuffle-tests-modal.component';
 
 const routes: Routes = [
   { path: '', component: AdminLayoutComponent, children: [
@@ -54,6 +55,7 @@ const routes: Routes = [
     DeleteModalComponent,
     ShuffleSectionModalComponent,
     CreateContentComponent,
+    ShuffleTestsModalComponent,
   ],
   imports: [
     CommonModule,

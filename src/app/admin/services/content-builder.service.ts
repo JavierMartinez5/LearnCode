@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate } from 'src/app/shared/interfaces';
+import { Observable, of, Subject } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate, TestData, TheoryData, TheoryDataOnCreate } from 'src/app/shared/interfaces';
 
 export interface NewChaptersData {
   position: string
@@ -16,6 +17,7 @@ export interface NewBlockData {
 
 @Injectable()
 export class ContentBuilderService {
+  public tutorialName: string = ''
 
   constructor(private http: HttpClient) { }
 
@@ -65,5 +67,17 @@ export class ContentBuilderService {
     //http request
     return of(blocks)
   }
+
+  public renewTheoryData(theoryData: Array<TheoryData[]>): Observable<Array<TheoryData[]>> {
+    //http request
+
+    //temporary
+    return of(theoryData).pipe(delay(3000))
+  }
+
+  public renewTestsData(testsData: TestData[]): Observable<TestData[]> {
+    return of(testsData).pipe(delay(3000))
+  }
+
 
 }

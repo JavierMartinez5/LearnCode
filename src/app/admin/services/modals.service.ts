@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate } from 'src/app/shared/interfaces';
+import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate, TestData } from 'src/app/shared/interfaces';
 import { MatDialog } from '@angular/material/dialog';
 import { ShuffleSectionModalComponent } from '../shared/shuffle-section-modal/shuffle-section-modal.component';
 import { ContentBuilderService, NewBlockData, NewChaptersData } from './content-builder.service';
@@ -9,6 +9,7 @@ import { DeleteModalComponent } from '../shared/delete-modal/delete-modal.compon
 import { EditSectionModalComponent } from '../shared/edit-section-modal/edit-section-modal.component';
 import { AddChapterModal, AddChapterModalComponent } from '../shared/add-chapter-modal/add-chapter-modal.component';
 import { AddSectionModal, AddSectionModalComponent } from '../shared/add-section-modal/add-section-modal.component';
+import { ShuffleTestsModalComponent } from '../components/modals/shuffle-tests-modal/shuffle-tests-modal.component';
 
 
 @Injectable()
@@ -25,7 +26,7 @@ export class ModalsService {
   }
 
   public openDeleteAllContentModal(tutorialName: string) {
-    
+
   }
 
   public openShuffleBlocksModal(tutorialName: string, blocks: MainNavData[]): Observable<MainNavData[] | null> {
@@ -133,5 +134,16 @@ export class ModalsService {
       //     this.navData = [...this.navData, newNavData];
       //   }
       // });
+  }
+
+  public openShuffleTestsModal(tests: TestData[]): Observable<TestData[]> {
+
+    const dialogRef = this.dialog.open(ShuffleTestsModalComponent, {
+      data: {
+        tests,
+      },
+    });
+
+    return dialogRef.afterClosed()
   }
 }

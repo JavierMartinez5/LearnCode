@@ -1,6 +1,9 @@
+<div *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
 <div class="section-container">
   <div class="col-1 theory-col-1">
-    
     <div class="dashboard-container flex v-center">
       <div>
         <button
@@ -8,12 +11,13 @@
           mat-raised-button
           color="primary"
           class="add-section"
+          [disabled]="isLoading"
         >
-          Create content <mat-icon>add</mat-icon>
+          Create content <mat-icon>{{isCreateContentOpen ? 'remove_circle' : 'add'}}</mat-icon>
         </button>
       </div>
       <div class="ml-1 flex">
-        <button  mat-mini-fab (click)="isDragAndDrop = !isDragAndDrop">
+        <button [disabled]="isLoading"  mat-mini-fab (click)="isDragAndDrop = !isDragAndDrop">
           <mat-icon>{{ isDragAndDrop ? "shuffle_on" : "shuffle" }}</mat-icon>
         </button>
       </div>
@@ -24,7 +28,7 @@
         </button>
       </div>
       <div class="ml-auto flex">
-        <button (click)="deleteAllContent()" mat-icon-button color="warn">
+        <button [disabled]="isLoading" (click)="deleteAllContent()" mat-icon-button color="warn">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
@@ -61,10 +65,13 @@
       </div>
       <!-- <mat-divider class="mb-2"></mat-divider> -->
     </div>
-    
 
     <app-create-content [@fade] *ngIf="isCreateContentOpen" (onCreateContent)="onCreateContent($event)"></app-create-content>
     
+    <div *ngIf="!dataWithChanges.length" class="flex content-center text-center v-center" style="height: 200px; width: 100%;">
+      <h2>No content on this page</h2>
+    </div>
+
     <div *ngIf="!isDragAndDrop; else offDragAndDropTemplate">
       <div [@fade] class="mt-2 ">
         <div class="section" *ngFor="let section of dataWithChanges; let sectionIdx=index">
@@ -81,8 +88,13 @@
             </button>
           </div>
 
+          <div>
+            <app-create-content  [@fade] *ngIf="isCreateContentInSectionOpen && currentEditSectionIdx === numbToStr(sectionIdx)" (onCreateContent)="onAddContentInSection($event)"></app-create-content>
+          </div>
+
           <div [ngClass]="{'currentEditSection': currentEditSectionIdx === numbToStr(sectionIdx)}" class="sub-section" *ngFor="let subSection of section; let subSectionIdx=index">
-            <div class="h-end flex" *ngIf="currentEditSectionIdx === numbToStr(sectionIdx)">
+            
+            <div class="h-end flex" *ngIf="currentEditSectionIdx === numbToStr(sectionIdx) && !isCreateContentInSectionOpen">
               <button (click)="editSubSection(subSectionIdx)" class="edit-btn mini-btn" mat-icon-button color="accent" [color]="currentEditSubSectionIdx === numbToStr(subSectionIdx) ? 'warn' : 'accent'">
                 <mat-icon class="mini-icon">{{currentEditSubSectionIdx === numbToStr(subSectionIdx) ? 'close' : 'edit'}}</mat-icon>
               </button>
@@ -170,7 +182,7 @@
   <div class="col-2">
     <div class="col-2-container">
       <h4>Overview Content</h4>
-      <nav>
+      <nav *ngIf="dataWithChanges.length">
         <a href="#">Умовне розгалуження: if, '?'</a>
         <a href="#">Інструкція «if»</a>
         <a href="#">Перетворення до логічного типу</a>
@@ -192,3 +204,5 @@
     </div>
   </div>
 </div>
+
+

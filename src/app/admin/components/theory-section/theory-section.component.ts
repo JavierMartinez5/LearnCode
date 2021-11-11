@@ -5,6 +5,8 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {transition, trigger, useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'ng-animate';
 import { CreateContentDataOut } from '../../shared/create-content/create-content.component';
+import { ContentBuilderService } from '../../services/content-builder.service';
+import { take, takeUntil } from 'rxjs/operators';
 
 
 
@@ -32,8 +34,10 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
   public codeLang = 'javascript'
   public editorOptions = {theme: 'vs-dark', language: this.codeLang};
 
+  public isLoading = false
   public isDragAndDrop = false
   public isCreateContentOpen = false
+  public isCreateContentInSectionOpen = false
   public isChanges = false
   public isSaveChangesBlockOpen = false
   public currentEditSectionIdx: string = ''
@@ -44,10 +48,14 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
   @Input() theoryData!: Array<TheoryData[]>
   public dataWithChanges: Array<TheoryData[]> = []
 
-  constructor(public tutorialService: TutorialService) { }
+  constructor(private contentBuilderService: ContentBuilderService) { }
 
   ngOnInit(): void {
     this.dataWithChanges = JSON.parse(JSON.stringify(this.theoryData))
+  }
+
+  ngOnDestroy() {
+
   }
 
   drop(event: CdkDragDrop<Array<TheoryData[]>>) {
@@ -63,9 +71,7 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
     this.isCreateContentOpen = !this.isCreateContentOpen
   }
 
-  ngOnDestroy() {
-
-  }
+  
 
   public onCreateContent(data: CreateContentDataOut | null) {
     if (!data) {
@@ -73,21 +79,62 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
       return
     }
 
-    const {createdContent, position} = data
+    const newSection: TheoryData[] = data.createdContent.map((section: TheoryDataOnCreate) => {
+      return {
+        id: `temporaryId-${Math.random()}`,
+        ...section
+      }
+    })
 
-    console.log('data', createdContent, position)
+    if (data.position === 'top') {
+      this.dataWithChanges = [newSection, ...this.dataWithChanges]
+    } else if (data.position === 'bottom') {
+      this.dataWithChanges = [...this.dataWithChanges, newSection]
+    }
+
     this.isChanges = true
     this.isCreateContentOpen = false
   }
 
-  public openSaveChanges() {
-    this.isSaveChangesBlockOpen = true
+  public onAddContentInSection(data: CreateContentDataOut | null) {
+    if (!data) {
+      this.isCreateContentInSectionOpen = false
+      this.currentEditSectionIdx = ''
+      return
+    }
+
+    const newSection: TheoryData[] = data.createdContent.map((section: TheoryDataOnCreate) => {
+      return {
+        id: `temporaryId-${Math.random()}`,
+        ...section
+      }
+    })
+
+    if (data.position === 'top') {
+      this.dataWithChanges[Number(this.currentEditSectionIdx)] = [...newSection, ...this.dataWithChanges[Number(this.currentEditSectionIdx)]]
+    } else if (data.position === 'bottom') {
+      this.dataWithChanges[Number(this.currentEditSectionIdx)] = [...this.dataWithChanges[Number(this.currentEditSectionIdx)], ...newSection]
+    }
+
+    this.isChanges = true
   }
 
   public saveChanges() {
+    this.isLoading = true
     this.isSaveChangesBlockOpen = false
     this.isChanges = false
+    this.isDragAndDrop = false
     //request
+    this.contentBuilderService.renewTheoryData(this.dataWithChanges).pipe(take(1)).subscribe(theoryData => {
+      console.log('changes applied')
+      this.dataWithChanges = JSON.parse(JSON.stringify(theoryData))
+      this.theoryData = JSON.parse(JSON.stringify(theoryData))
+      this.isLoading = false
+    }, () => {this.isLoading = false})
+  }
+
+  public openSaveChanges() {
+    this.isSaveChangesBlockOpen = true
   }
 
   public removeChanges() {
@@ -97,15 +144,43 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
   }
 
   public deleteAllContent() {
-
+    this.dataWithChanges = []
+    this.isChanges = true
   }
 
   public addContentInSection(sectionIndex: number) {
-    
+    const sectionIndexStr = sectionIndex.toString()
+
+    if (this.isCreateContentInSectionOpen && (this.currentEditSectionIdx !== sectionIndexStr)) {
+      this.currentEditSectionIdx = ''
+      this.currentEditSubSectionIdx = ''
+    }
+
+    if (this.isCreateContentInSectionOpen && (this.currentEditSectionIdx === sectionIndexStr)) {
+      this.isCreateContentInSectionOpen = false
+      this.currentEditSectionIdx = ''
+      this.currentEditSubSectionIdx = ''
+      return
+    }
+
+    if (!this.isCreateContentInSectionOpen) {
+      this.isCreateContentInSectionOpen = true
+      this.currentEditSectionIdx = ''
+      this.currentEditSubSectionIdx = ''
+    }
+
+    this.isCreateContentInSectionOpen = true
+    this.currentEditSectionIdx = sectionIndexStr
+
   }
 
   public editSection(sectionIndex: number) {
     const sectionIndexStr = sectionIndex.toString()
+
+    if (this.isCreateContentInSectionOpen) {
+      this.isCreateContentInSectionOpen = false
+      this.currentEditSectionIdx = ''
+    }
 
     if (this.currentEditSectionIdx === sectionIndexStr) {
       this.lastOpenedSection = this.currentEditSectionIdx
@@ -116,14 +191,26 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
     if (this.lastOpenedSection !== sectionIndexStr) {
       this.currentEditSubSectionIdx = ''
     }
- 
+
+    if ((this.lastOpenedSection === sectionIndexStr) && (this.currentEditSectionIdx)) {
+      this.currentEditSubSectionIdx = ''
+      //!!!!!!!!!!! genius!
+    }
+    
     this.currentEditSectionIdx = sectionIndexStr
   }
 
   public deleteSection(sectionIndex: number) {
+
     this.dataWithChanges = this.dataWithChanges.filter(( _, i) => {
       return i !== sectionIndex
     })
+    this.lastOpenedSection = ''
+    this.isCreateContentInSectionOpen = false
+    this.currentEditSectionIdx = ''
+    this.currentEditSubSectionIdx = ''
+
+    this.isChanges = true
   }
 
   public editSubSection(subSectionIdx: number) {

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, Subscription } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, shareReplay, take, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TutorialService } from 'src/app/shared/services/tutorial.service';
 import { MainNavData, TabsLink, TaskData, TestData, TheoryData } from 'src/app/shared/interfaces';
@@ -18,6 +18,12 @@ export class MainNavComponent implements OnInit, OnDestroy {
       map((result) => result.matches),
       shareReplay()
     );
+  
+  private isComponentInited = false
+  private lastTutorialName = ''
+  private lastChapterId = ''
+  private unsubscribeTutorial$ = new Subject<any>()
+  public isDownloading = false
   
   public navData: MainNavData[] = []
   public currentTutorialName!: string
@@ -37,6 +43,11 @@ export class MainNavComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.currentTutorialName = params.language
+      this.unsubscribeTutorial$.next()
+
+      if (this.lastTutorialName !== this.currentTutorialName) {
+        this.isComponentInited = false
+      }
       
       this.getTutorialNavDataSub = this.tutorialService.getTutorialMainNavData(params.language).subscribe((navData: MainNavData[]) => {
         this.navData = navData
@@ -56,7 +67,19 @@ export class MainNavComponent implements OnInit, OnDestroy {
             this.sectionTitle = 'theory';
           }
     
-          this.navigate(this.currentTutorialName, this.chapterId, this.sectionTitle)
+          if (!this.isComponentInited) {
+            this.theoryData = []
+            this.testsData = []
+            this.practiceData = []
+            this.isComponentInited = true
+            this.lastTutorialName = this.currentTutorialName
+          }
+
+          this.navigate(
+            this.currentTutorialName,
+            this.chapterId,
+            this.sectionTitle
+          );
         })
       })
     })
@@ -84,30 +107,66 @@ export class MainNavComponent implements OnInit, OnDestroy {
     this.onClickSectionLinkHandler(this.sectionTitle)
   }
 
-  public onClickChupterLinkHandler(chupterId: string) {
-    this.chapterId = chupterId
-    
+  public onChapterClick(chapterId: string) {
+    this.chapterId = chapterId
+    this.theoryData = []
+    this.testsData = []
+    this.practiceData = []
+
+    if (this.sectionTitle) {
+      this.onClickSectionLinkHandler(this.sectionTitle)
+    } else {
+      this.onClickSectionLinkHandler(this.links[0].sectionRouteTitle)
+    } 
   }
 
   public onClickSectionLinkHandler(sectionRouteTitle: string) {
-    this.sectionTitle = sectionRouteTitle
+    this.sectionTitle = sectionRouteTitle;
+    this.unsubscribeTutorial$.next()
 
     if (this.sectionTitle === 'theory') {
-      this.tutorialService.getTheorySectionData(this.currentTutorialName, this.chapterId).subscribe((data: Array<TheoryData[]>) => {
-        this.theoryData = data
-      }).unsubscribe()
+      if (this.theoryData.length && (this.lastChapterId === this.chapterId)) return
+      this.isDownloading = true
+      this.theoryData = []
+      this.tutorialService
+        .getTheorySectionData(this.currentTutorialName, this.chapterId)
+        .pipe(takeUntil(this.unsubscribeTutorial$))
+        .subscribe((data: Array<TheoryData[]>) => {
+          console.log('theory')
+          this.theoryData = data;
+          this.lastChapterId = this.chapterId
+          this.isDownloading = false
+        }, () => {this.isDownloading = false})
     }
-    
+
     if (this.sectionTitle === 'tests') {
-      this.tutorialService.getTestsSectionData(this.currentTutorialName, this.chapterId).subscribe((data: TestData[]) => {
-        this.testsData = data
-      }).unsubscribe()
+      if (this.testsData.length && (this.lastChapterId === this.chapterId)) return
+      this.isDownloading = true
+      this.testsData = []
+      this.tutorialService
+        .getTestsSectionData(this.currentTutorialName, this.chapterId)
+        .pipe(takeUntil(this.unsubscribeTutorial$))
+        .subscribe((data: TestData[]) => {
+          console.log('tests')
+          this.testsData = data;
+          this.lastChapterId = this.chapterId
+          this.isDownloading = false
+        }, () => {this.isDownloading = false})
     }
 
     if (this.sectionTitle === 'practice') {
-      this.tutorialService.getPracticeSectionData(this.currentTutorialName, this.chapterId).subscribe((data: TaskData[]) => {
-        this.practiceData = data
-      }).unsubscribe()
+      if (this.practiceData.length && (this.lastChapterId === this.chapterId)) return
+      this.isDownloading = true
+      this.practiceData = []
+      this.tutorialService
+        .getPracticeSectionData(this.currentTutorialName, this.chapterId)
+        .pipe(takeUntil(this.unsubscribeTutorial$))
+        .subscribe((data: TaskData[]) => {
+          console.log('practice')
+          this.practiceData = data;
+          this.lastChapterId = this.chapterId
+          this.isDownloading = false
+        }, () => {this.isDownloading = false})
     }
   }
 }

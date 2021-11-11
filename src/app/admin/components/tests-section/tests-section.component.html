@@ -1,9 +1,69 @@
-<!-- <div class="tutorial-container">
-
-</div> -->
+<div *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
 
 <div class="section-container">
     <div class="col-1">
+
+      <div class="dashboard-container flex v-center">
+        <div>
+          <button
+            (click)="addContent()"
+            mat-raised-button
+            color="primary"
+            class="add-section"
+            [disabled]="isLoading"
+          >
+            Create content <mat-icon>{{isCreateContentOpen ? 'remove_circle' : 'add'}}</mat-icon>
+          </button>
+        </div>
+        <div class="ml-1 flex">
+          <button [disabled]="isLoading"  mat-mini-fab (click)="shuffleTests()">
+            <mat-icon>shuffle</mat-icon>
+          </button>
+        </div>
+        <div class="ml-1 flex">
+          <button class="save-btn" [disabled]="!isChanges"  mat-mini-fab (click)="isSaveChangesBlockOpen = !isSaveChangesBlockOpen">
+            <mat-icon >save</mat-icon>
+            
+          </button>
+        </div>
+        <div class="ml-auto flex">
+          <button [disabled]="isLoading" (click)="deleteAllContent()" mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        
+      </div>
+
+      <div [@fade] class="alert-changes" *ngIf="isSaveChangesBlockOpen">
+        <div class="flex h-end height-15px">
+          <button (click)="isSaveChangesBlockOpen = false" mat-icon-button color="warn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="text-center flex content-center v-center">
+          <p><strong>Save changes on this page?</strong></p>
+        </div>
+        
+        <div class="flex content-center mb-1">
+          <div>
+            <button  (click)="saveChanges()" mat-stroked-button class="c-green">
+              Yes
+            </button>
+          </div>
+          <div class="ml-1">
+            <button
+            (click)="removeChanges()"
+            mat-stroked-button
+            color="warn"
+            >
+            Remove all changes
+            </button>
+          </div>
+        </div>
+      </div>
+
       <mat-stepper orientation="vertical">
         <mat-step *ngFor="let test of testsData; let i = index">
           <ng-template matStepLabel>Тест {{ i + 1 }}.  {{test.taskTitle.slice(0, 30)}}...</ng-template>
