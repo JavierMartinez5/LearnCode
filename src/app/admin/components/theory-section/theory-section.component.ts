@@ -1,12 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TheoryData, TheoryDataOnCreate } from 'src/app/shared/interfaces';
-import { TutorialService } from 'src/app/shared/services/tutorial.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {transition, trigger, useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from 'ng-animate';
 import { CreateContentDataOut } from '../../shared/create-content/create-content.component';
 import { ContentBuilderService } from '../../services/content-builder.service';
-import { take, takeUntil } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 
 

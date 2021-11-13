@@ -1,6 +1,6 @@
 <div class="modal-container">
-    <h3 mat-dialog-title class="modal-header">Shaffle blocks modal</h3>
-    <p>Change block position by drag and drop</p>
+    <h3 mat-dialog-title class="modal-header">Shaffle tests modal</h3>
+    <p>Change tests position by drag and drop</p>
     <mat-dialog-content>
         <div cdkDropList (cdkDropListDropped)="drop($event)">
             <mat-list class="modal-mat-list cursor-grab" *ngFor="let test of tests; let i = index" cdkDrag role="list">

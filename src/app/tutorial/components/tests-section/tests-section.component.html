@@ -3,47 +3,66 @@
 </div> -->
 
 <div class="section-container">
-    <div class="col-1">
-      <mat-stepper orientation="vertical">
-        <mat-step *ngFor="let test of testsData; let i = index">
-          <ng-template matStepLabel>Тест {{ i + 1 }}.  {{test.taskTitle.slice(0, 30)}}...</ng-template>
-          <p class="task-title">{{ test.taskTitle }}</p>
-          <pre
-            *ngIf="test.taskCode"
-          ><code [highlight]="test.taskCode" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
-          <ng-template matStepContent>
-            <mat-radio-group class="radio-group" [(ngModel)]="taskAnswer">
-              <mat-radio-button
-                class="radio-button"
-                *ngFor="let anwser of test.answers"
-                [value]="anwser"
+  <div class="col-1">
+    <mat-stepper orientation="vertical">
+      <mat-step *ngFor="let test of testsData; let i = index">
+        <ng-template matStepLabel>
+          <div class="flex v-center">
+            <div>Тест {{ i + 1 }}.</div>
+            <quill-view-html
+              [content]="test.taskTitle.slice(0, 40)"
+            ></quill-view-html
+            >...
+          </div>
+        </ng-template>
+        <quill-view-html [content]="test.taskTitle"></quill-view-html>
+
+        <pre
+          *ngIf="test.taskCode"
+        ><code [highlight]="test.taskCode" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+        <div>
+          <mat-radio-group class="radio-group" [(ngModel)]="taskAnswer">
+            <mat-radio-button
+              class="radio-button"
+              *ngFor="let anwser of test.answers"
+              [value]="anwser"
+            >
+              <quill-view-html [content]="anwser"></quill-view-html>
+            </mat-radio-button>
+            <p
+              class="msg"
+              [ngClass]="{ 'wrong-answer': msg === 'Невірно!' }"
+              *ngIf="test === currentTest"
+            >
+              {{ msg }}
+            </p>
+            <div class="btn-container">
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="checkboxHandler(test)"
               >
-                {{ anwser }}
-              </mat-radio-button>
-              <p class="msg" [ngClass]="{'wrong-answer': msg === 'Невірно!'}" *ngIf="test === currentTest">{{ msg }}</p>
-              <div class="btn-container">
-                <button
-                  mat-stroked-button
-                  color="primary"
-                  (click)="checkboxHandler(test)"
-                >
-                  Підтвердити відповідь
-                </button>
-                <button *ngIf="i !== testsData.length - 1" mat-button matStepperNext>
-                  Далі
-                </button>
-              </div>
-            </mat-radio-group>
-          </ng-template>
-        </mat-step>
-      </mat-stepper>
-    </div>
-  
-    <div class="col-2" *ngIf="testsStatistic">
-      <div class="col-2-container">
-        <p>Всього тестів: {{ testsStatistic.totalTests }}</p>
-        <p>Правильних відповідей: {{ testsStatistic.correctAnswers }}</p>
-        <p>Неправильних відвовідей: {{ testsStatistic.wrongAnswers }}</p>
-      </div>
+                Підтвердити відповідь
+              </button>
+              <button
+                *ngIf="i !== testsData.length - 1"
+                mat-button
+                matStepperNext
+              >
+                Далі
+              </button>
+            </div>
+          </mat-radio-group>
+        </div>
+      </mat-step>
+    </mat-stepper>
+  </div>
+
+  <div class="col-2" *ngIf="testsStatistic">
+    <div class="col-2-container">
+      <p>Всього тестів: {{ testsStatistic.totalTests }}</p>
+      <p>Правильних відповідей: {{ testsStatistic.correctAnswers }}</p>
+      <p>Неправильних відвовідей: {{ testsStatistic.wrongAnswers }}</p>
     </div>
   </div>
+</div>

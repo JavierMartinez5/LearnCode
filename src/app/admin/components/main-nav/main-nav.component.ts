@@ -211,6 +211,7 @@ export class MainNavComponent implements OnInit, OnDestroy {
   public onClickSectionLinkHandler(sectionRouteTitle: string) {
     this.sectionTitle = sectionRouteTitle;
     this.unsubscribeTutorial$.next()
+    this.isDownloading = false
 
     if (this.sectionTitle === 'theory') {
       if (this.theoryData.length && (this.lastChapterId === this.chapterId)) return

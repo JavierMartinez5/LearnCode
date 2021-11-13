@@ -7,7 +7,7 @@
   
         <mat-tab-group mat-align-tabs="center">
           <mat-tab label="Завдання">
-            <p class="task-title">{{ task.taskText }}</p>
+            <!-- <p class="task-title">{{ task.taskText }}</p>
   
             <mat-divider></mat-divider>
             <div style="height: 350px">
@@ -25,7 +25,12 @@
               *ngIf="task.id === currentTaskId"
             >
               {{ isTrueAnswer ? "Правильно!" : "Неправильно!" }}
-            </p>
+            </p> -->
+
+            <div>
+              <app-practice-task [task]="task"></app-practice-task>
+            </div>
+
             <div class="btn-container">
               <button
                 mat-stroked-button

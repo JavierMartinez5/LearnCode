@@ -1,0 +1,151 @@
+<div class="create-content">
+  <div>
+    <div class="sub-section">
+      <div class="p-1" *ngIf="createdTest.taskTitle">
+        <div>
+          <p>Test text :</p>
+        </div>
+        <div>
+          <quill-view-html [content]="createdTest.taskTitle"></quill-view-html>
+        </div>
+      </div>
+
+      <div class="p-1" *ngIf="createdTest.taskCode">
+        <div>
+          <p>Test code :</p>
+        </div>
+        <div>
+          <pre><code [highlight]="createdTest.taskCode" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+        </div>
+      </div>
+
+      <div class="p-1" *ngIf="createdTest.answers[0]">
+        <div>
+          <p>Possible answers :</p>
+        </div>
+        <div class="flex v-center" *ngFor="let answer of createdTest.answers; let i = index">
+          <div class="n-answer">
+            <div><strong>{{i + 1}}</strong></div>
+          </div>
+          <quill-view-html [content]="answer"></quill-view-html>
+        </div>
+      </div>
+
+      <div class="p-1" *ngIf="createdTest.rightAnswer">
+        <div>
+          <p>Right answer :</p>
+        </div>
+        <strong><quill-view-html [content]="createdTest.rightAnswer"></quill-view-html></strong>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentTool">
+    <div *ngIf="currentTool === 'taskTitle'">
+      <quill-editor
+        placeholder="Field for content"
+        [(ngModel)]="taskTitle"
+      ></quill-editor>
+    </div>
+
+    <div *ngIf="currentTool === 'rightAnswer'">
+      <quill-editor
+        placeholder="Field for content"
+        [(ngModel)]="rightAnswer"
+      ></quill-editor>
+    </div>
+
+    <div *ngIf="currentTool === 'answers'">
+      <div *ngFor="let item of answers; let i = index">
+        <div class="ml-1">
+          <p><strong>Answer {{i + 1}}</strong></p>
+        </div>
+        <div>
+          <quill-editor
+          placeholder="Field for content"
+          [(ngModel)]="answers[i].text"
+          ></quill-editor>
+        </div>
+      </div>
+
+      <div>
+        <button (click)="createAnswer()" mat-raised-button>Add {{answers.length + 1}}-th answer</button>
+      </div>
+    </div>
+
+    <div *ngIf="currentTool === 'taskCode' ">
+      <div style="height: 250px">
+        <ngx-monaco-editor
+          style="height: 100%"
+          class="my-code-editor"
+          [options]="editorOptions"
+          [(ngModel)]="taskCode"
+        ></ngx-monaco-editor>
+      </div>
+    </div>
+
+    <div class="flex content-center mt-2">
+      <div>
+        <button (click)="createBlock()" mat-raised-button>Create block</button>
+      </div>
+      <div class="ml-1">
+        <button (click)="cancelCreateBlock()" mat-stroked-button>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!currentTool" class="flex content-center mt-2 small-screen">
+    <div class="ml-1 small-screen ">
+      <div class="small-screen mb-1">
+        <button (click)="currentTool = 'taskTitle'" mat-stroked-button>
+          Create task title <mat-icon>ballot</mat-icon>
+        </button>
+      </div>
+      <div class="small-screen mb-1">
+        <button (click)="currentTool = 'taskCode'" mat-stroked-button>
+          Create task code (?) <mat-icon>integration_instructions</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="ml-1 small-screen">
+      <div class="small-screen mb-1 flex content-center">
+        <button (click)="addAnswers()" mat-stroked-button>
+          Create bossible answers <mat-icon>question_answer</mat-icon>
+        </button>
+      </div>
+      <div class="small-screen ">
+        <button (click)="currentTool = 'rightAnswer'" mat-stroked-button>
+          Create right answer <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!currentTool && isCreatedTestValid()" class="flex mt-2 clumn">
+    <div *ngIf="!testForEdit" class="m0auto text-center">
+      <label id="radio-group-label">Place in :</label>
+      <div class="modal-radio-group">
+        <mat-radio-group
+          [(ngModel)]="position"
+          aria-label="Select an option"
+          aria-labelledby="radio-group-label"
+        >
+          <mat-radio-button value="bottom">bottom</mat-radio-button>
+          <mat-radio-button class="ml-1" value="top">top</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+    <div class="flex content-center mt-1">
+      <div>
+        <button class="c-green" (click)="finishCreation()" mat-stroked-button>
+          Submit<mat-icon>note_add</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1">
+        <button (click)="finishCreation(true)" mat-stroked-button color="warn">
+          Cancel <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

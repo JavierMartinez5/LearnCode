@@ -46,6 +46,14 @@ export interface TestData {
   taskCode?: string;
 }
 
+export interface TestDataOnCreate {
+  id?: string
+  taskTitle: string;
+  answers: string[];
+  rightAnswer: string;
+  taskCode?: string;
+}
+
 export interface TaskData {
   id: string
   taskText: string

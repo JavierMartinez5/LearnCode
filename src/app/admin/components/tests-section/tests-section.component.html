@@ -14,22 +14,21 @@
             class="add-section"
             [disabled]="isLoading"
           >
-            Create content <mat-icon>{{isCreateContentOpen ? 'remove_circle' : 'add'}}</mat-icon>
+            Create test <mat-icon>{{isCreateContentOpen ? 'remove_circle' : 'add'}}</mat-icon>
           </button>
         </div>
         <div class="ml-1 flex">
-          <button [disabled]="isLoading"  mat-mini-fab (click)="shuffleTests()">
+          <button [disabled]="isLoading"  matTooltip="Shuffle tests" [matTooltipShowDelay]="toolTipDelay" mat-mini-fab (click)="shuffleTests()">
             <mat-icon>shuffle</mat-icon>
           </button>
         </div>
         <div class="ml-1 flex">
-          <button class="save-btn" [disabled]="!isChanges"  mat-mini-fab (click)="isSaveChangesBlockOpen = !isSaveChangesBlockOpen">
+          <button class="save-btn" [disabled]="!isChanges"  matTooltip="Save all changes" [matTooltipShowDelay]="toolTipDelay"  mat-mini-fab (click)="isSaveChangesBlockOpen = !isSaveChangesBlockOpen">
             <mat-icon >save</mat-icon>
-            
           </button>
         </div>
         <div class="ml-auto flex">
-          <button [disabled]="isLoading" (click)="deleteAllContent()" mat-icon-button color="warn">
+          <button [disabled]="isLoading" (click)="deleteAllContent()"  matTooltip="Remove all tests" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="warn">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -38,7 +37,7 @@
 
       <div [@fade] class="alert-changes" *ngIf="isSaveChangesBlockOpen">
         <div class="flex h-end height-15px">
-          <button (click)="isSaveChangesBlockOpen = false" mat-icon-button color="warn">
+          <button (click)="isSaveChangesBlockOpen = false" matTooltip="Close" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="warn">
             <mat-icon>close</mat-icon>
           </button>
         </div>
@@ -64,43 +63,71 @@
         </div>
       </div>
 
-      <mat-stepper orientation="vertical">
-        <mat-step *ngFor="let test of testsData; let i = index">
-          <ng-template matStepLabel>Тест {{ i + 1 }}.  {{test.taskTitle.slice(0, 30)}}...</ng-template>
-          <p class="task-title">{{ test.taskTitle }}</p>
-          <pre
-            *ngIf="test.taskCode"
-          ><code [highlight]="test.taskCode" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
-          <ng-template matStepContent>
-            <mat-radio-group class="radio-group" [(ngModel)]="taskAnswer">
-              <mat-radio-button
-                class="radio-button"
-                *ngFor="let anwser of test.answers"
-                [value]="anwser"
-              >
-                {{ anwser }}
-              </mat-radio-button>
-              <p class="msg" [ngClass]="{'wrong-answer': msg === 'Невірно!'}" *ngIf="test === currentTest">{{ msg }}</p>
-              <div class="btn-container">
-                <button
-                  mat-stroked-button
-                  color="primary"
-                  (click)="checkboxHandler(test)"
-                >
-                  Підтвердити відповідь
-                </button>
-                <button *ngIf="i !== testsData.length - 1" mat-button matStepperNext>
-                  Далі
-                </button>
+      <app-create-tests [@fade] *ngIf="isCreateContentOpen" (onCreateTests)="onCreateTests($event)"></app-create-tests>
+
+      <div *ngIf="!dataWithChanges.length" class="flex content-center text-center v-center" style="height: 200px; width: 100%;">
+        <h2>No content on this page</h2>
+      </div>
+
+      <mat-stepper *ngIf="dataWithChanges.length" orientation="vertical">
+        <mat-step *ngFor="let test of dataWithChanges; let i = index">
+          <ng-template  matStepLabel>
+            <div class="flex v-center">
+              <div>
+                Тест {{ i + 1 }}.
               </div>
-            </mat-radio-group>
+              <quill-view-html [content]="test.taskTitle.slice(0, 40)"></quill-view-html>...
+            </div>
           </ng-template>
+
+          <div class="flex h-end">
+            <button (click)="createTest(test.id)" class="edit-btn mini-btn" matTooltip="Edit test" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="accent">
+              <mat-icon class="mini-icon">{{currentEditingTestId === test.id ? 'close' : 'edit'}}</mat-icon>
+            </button>
+            <button (click)="deleteTest(test.id)" class="delete-btn mini-btn" matTooltip="Delete test" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="warn">
+              <mat-icon class="mini-icon">delete</mat-icon>
+            </button>
+          </div>
+
+          <app-create-tests [@fade] *ngIf="currentEditingTestId === test.id" [test]="test" (onCreateTests)="onCreateTests($event)"></app-create-tests>
+
+          <div *ngIf="currentEditingTestId !== test.id">
+            <quill-view-html [content]="test.taskTitle"></quill-view-html>
+
+            <pre
+            *ngIf="test.taskCode"
+            ><code [highlight]="test.taskCode" [languages]="['javascript']" [lineNumbers]="true"></code></pre>
+            <div>
+              <mat-radio-group class="radio-group" [(ngModel)]="taskAnswer">
+                <mat-radio-button
+                  class="radio-button"
+                  *ngFor="let anwser of test.answers"
+                  [value]="anwser"
+                >
+                <quill-view-html [content]="anwser"></quill-view-html>
+                </mat-radio-button>
+                <p class="msg" [ngClass]="{'wrong-answer': msg === 'Невірно!'}" *ngIf="test === currentTest">{{ msg }}</p>
+                <div class="btn-container">
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    (click)="checkboxHandler(test)"
+                  >
+                    Підтвердити відповідь
+                  </button>
+                  <button *ngIf="i !== testsData.length - 1" mat-button matStepperNext>
+                    Далі
+                  </button>
+                </div>
+              </mat-radio-group>
+            </div>
+          </div>
         </mat-step>
       </mat-stepper>
     </div>
   
     <div class="col-2" *ngIf="testsStatistic">
-      <div class="col-2-container">
+      <div  class="col-2-container">
         <p>Всього тестів: {{ testsStatistic.totalTests }}</p>
         <p>Правильних відповідей: {{ testsStatistic.correctAnswers }}</p>
         <p>Неправильних відвовідей: {{ testsStatistic.wrongAnswers }}</p>

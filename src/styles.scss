@@ -69,12 +69,20 @@ td.hljs-ln-code {
 .section-container {
   display: flex;
   flex-direction: row;
+  height: 100%;
   padding: 0px 5px 50px 40px;
 }
 
 @media (max-width: 840px) {
   .section-container {
     padding: 5px 4px;
+  }
+
+  .small-screen {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    margin-right: 1rem;
   }
 }
 
@@ -309,7 +317,9 @@ mat-panel-title {
   margin: 0 auto;
 }
 
-
+.p-1 {
+  padding: 1rem;
+}
 
 .delete-text {
   text-align: center;
@@ -320,6 +330,13 @@ mat-panel-title {
   border: dashed 2px #FFFF00;
   border-radius: 5px;
   background: #424242;
+}
+
+.create-content {
+  min-height: 100px;
+  border: 2px #4527A0 dashed;
+  padding: 50px 0;
+  margin-top: 25px;
 }
 
 .modal-mat-list:hover {

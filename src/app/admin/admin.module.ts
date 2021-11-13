@@ -24,6 +24,11 @@ import { ShuffleSectionModalComponent } from './shared/shuffle-section-modal/shu
 import { ModalsService } from './services/modals.service';
 import { CreateContentComponent } from './shared/create-content/create-content.component';
 import { ShuffleTestsModalComponent } from './components/modals/shuffle-tests-modal/shuffle-tests-modal.component';
+import { CreateTestsComponent } from './shared/create-tests/create-tests.component';
+import { CreateTasksComponent } from './shared/create-tasks/create-tasks.component';
+import { PracticeTaskComponent } from './components/practice-task/practice-task.component';
+import { PracticeAnswerComponent } from './components/practice-answer/practice-answer.component';
+import { PracticeItemComponent } from './components/practice-item/practice-item.component';
 
 const routes: Routes = [
   { path: '', component: AdminLayoutComponent, children: [
@@ -56,6 +61,11 @@ const routes: Routes = [
     ShuffleSectionModalComponent,
     CreateContentComponent,
     ShuffleTestsModalComponent,
+    CreateTestsComponent,
+    CreateTasksComponent,
+    PracticeTaskComponent,
+    PracticeAnswerComponent,
+    PracticeItemComponent,
   ],
   imports: [
     CommonModule,
