@@ -12,7 +12,9 @@ export class TutorialService {
   // public testData$: Subject<TestData[]> = new Subject<TestData[]>()
   // public practiceData$: Subject<PracticeData[]> = new Subject<PracticeData[]>()
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    console.log('VASIA');
+  }
 
   public getTutorialNameList(): Observable<string[]> {
     // return this.http.get('Adress')
