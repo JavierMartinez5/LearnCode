@@ -19,6 +19,11 @@ export class DashboardPageComponent implements OnInit {
   }
 
   public navigate(tutorialName: string) {
-    this.router.navigate(['/admin', 'tutorial', tutorialName])
+    this.tutorialService.pluckFirstChapter(tutorialName).subscribe(chapterId => {
+      this.router.navigate(
+        ['/admin', 'tutorial', tutorialName], 
+        { queryParams: { chapterId, sectionTitle: 'theory'}}
+      );
+    })
   }
 }

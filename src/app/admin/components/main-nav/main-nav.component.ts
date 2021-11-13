@@ -66,7 +66,8 @@ export class MainNavComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       this.currentTutorialName = params.language;
       this.unsubscribeTutorial$.next()
-      console.log('aaaaaaaaaaa')
+      console.log('aaaaaaaaаaaa')
+      debugger
 
       if (this.lastTutorialName !== this.currentTutorialName) {
         this.isComponentInited = false
@@ -101,11 +102,12 @@ export class MainNavComponent implements OnInit, OnDestroy {
               this.lastTutorialName = this.currentTutorialName
             }
 
-            this.navigate(
-              this.currentTutorialName,
-              this.chapterId,
-              this.sectionTitle
-            );
+            // this.navigate(
+            //   this.currentTutorialName,
+            //   this.chapterId,
+            //   this.sectionTitle
+            // );
+            this.onClickSectionLinkHandler(this.sectionTitle);
           });
         });
     })

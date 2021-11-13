@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { delay, tap, timeout } from 'rxjs/operators';
+import { delay, map, take, tap, timeout } from 'rxjs/operators';
 import { Comment, MainNavData, TaskData, TestData, TheoryData } from '../interfaces';
 
 @Injectable({
@@ -19,6 +19,14 @@ export class TutorialService {
   public getTutorialNameList(): Observable<string[]> {
     // return this.http.get('Adress')
     return of(['JavaScript', 'C#', 'Java', 'Ruby'])
+  }
+
+  public pluckFirstChapter(name: string) {
+    return this.getTutorialMainNavData(name)
+      .pipe(
+        map(tutorials => tutorials[0].chapters[0].id),
+        take(1),
+      );
   }
 
   public getTutorialMainNavData(tutorialName: string): Observable<MainNavData[]> {
