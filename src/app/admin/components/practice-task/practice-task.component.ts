@@ -20,6 +20,7 @@ export class PracticeTaskComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('dddd')
   }
 
   public createBlock() {
