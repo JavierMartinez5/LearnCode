@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SelectTutorialService } from 'src/app/shared/services/select-tutorial.service';
 import { TutorialService } from 'src/app/shared/services/tutorial.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
 export class TopNavComponent implements OnInit {
   public tutorialNameList!: string[]
 
-  constructor(private tutorialService: TutorialService, private router: Router, public auth: AuthService) { }
+  constructor(private tutorialService: TutorialService, private router: Router, public auth: AuthService, private selectTutorial: SelectTutorialService) { }
 
   ngOnInit(): void {
     this.tutorialService.getTutorialNameList().subscribe((list: string[]) => {
@@ -20,8 +21,12 @@ export class TopNavComponent implements OnInit {
   }
 
   public navigate(tutorialName: string) {
-    this.router.navigate(['/admin', 'tutorial', tutorialName])
+    this.selectTutorial.selectTutorial(tutorialName).subscribe();
   }
+
+  // public navigate(tutorialName: string) {
+  //   this.router.navigate(['/admin', 'tutorial', tutorialName])
+  // }
 
   logout() {
     this.auth.logout()
