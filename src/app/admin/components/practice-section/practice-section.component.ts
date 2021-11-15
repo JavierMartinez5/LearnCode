@@ -71,14 +71,18 @@ export class PracticeSectionComponent implements OnInit {
   public saveConfirmation(action: string) {
     if (action === 'save') {
       this.isLoading = true
+      this.isChanges = false
+      this.isSaveChangesBlockOpen = false
 
       this.contentBuilderService.renewPracticeData(this.dataWithChanges).pipe(take(1)).subscribe(tasks => {
         this.practiceData = JSON.parse(JSON.stringify(tasks))
         this.dataWithChanges = JSON.parse(JSON.stringify(tasks))
-        this.isChanges = false
         this.isLoading = false
-        this.isSaveChangesBlockOpen = false
-      }, () => {this.isLoading = false})
+        
+      }, () => {
+        this.isLoading = false
+        this.isChanges = true
+      })
     }
 
     if (action === 'remove') {
@@ -111,5 +115,6 @@ export class PracticeSectionComponent implements OnInit {
 
   public deleteTask(taskId: string) {
     this.dataWithChanges = this.dataWithChanges.filter(task => task.id !== taskId)
+    this.isChanges = true
   }
 }
