@@ -1,0 +1,29 @@
+<div class="alert-changes">
+  <div class="flex h-end height-15px">
+    <button
+      (click)="action('close')"
+      matTooltip="Close"
+      [matTooltipShowDelay]="toolTipDelay"
+      mat-icon-button
+      color="warn"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="text-center flex content-center v-center">
+    <p><strong>Save changes on this page?</strong></p>
+  </div>
+
+  <div class="flex content-center mb-1">
+    <div>
+      <button (click)="action('save')" mat-stroked-button class="c-green">
+        Yes
+      </button>
+    </div>
+    <div class="ml-1">
+      <button (click)="action('remove')" mat-stroked-button color="warn">
+        Remove all changes
+      </button>
+    </div>
+  </div>
+</div>

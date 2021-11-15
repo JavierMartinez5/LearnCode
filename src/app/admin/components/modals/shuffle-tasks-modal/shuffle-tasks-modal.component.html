@@ -1,0 +1,18 @@
+<div class="modal-container">
+    <h3 mat-dialog-title class="modal-header">Shaffle tests modal</h3>
+    <p>Change tests position by drag and drop</p>
+    <mat-dialog-content>
+        <div cdkDropList (cdkDropListDropped)="drop($event)">
+            <mat-list class="modal-mat-list cursor-grab" *ngFor="let task of tasks; let i = index" cdkDrag role="list">
+            <mat-list-item role="listitem">Test {{i + 1}} : {{ task.taskText.slice(0, 40) }}</mat-list-item>
+            <mat-divider></mat-divider>
+            </mat-list>
+        </div>
+    </mat-dialog-content>
+    
+      
+      <div mat-dialog-actions class="space-betweet">
+        <button [mat-dialog-close]="submit()" mat-raised-button>Submit</button>
+        <button mat-button mat-dialog-close>Cancel</button>
+      </div>
+</div>

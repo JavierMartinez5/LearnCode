@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate, TestData } from 'src/app/shared/interfaces';
+import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate, TestData, TaskData } from 'src/app/shared/interfaces';
 import { MatDialog } from '@angular/material/dialog';
 import { ShuffleSectionModalComponent } from '../shared/shuffle-section-modal/shuffle-section-modal.component';
 import { ContentBuilderService, NewBlockData, NewChaptersData } from './content-builder.service';
@@ -10,6 +10,7 @@ import { EditSectionModalComponent } from '../shared/edit-section-modal/edit-sec
 import { AddChapterModal, AddChapterModalComponent } from '../shared/add-chapter-modal/add-chapter-modal.component';
 import { AddSectionModal, AddSectionModalComponent } from '../shared/add-section-modal/add-section-modal.component';
 import { ShuffleTestsModalComponent } from '../components/modals/shuffle-tests-modal/shuffle-tests-modal.component';
+import { ShuffleTasksModalComponent } from '../components/modals/shuffle-tasks-modal/shuffle-tasks-modal.component';
 
 
 @Injectable()
@@ -141,6 +142,17 @@ export class ModalsService {
     const dialogRef = this.dialog.open(ShuffleTestsModalComponent, {
       data: {
         tests,
+      },
+    });
+
+    return dialogRef.afterClosed()
+  }
+
+  public openShuffleTasksModal(tasks: TaskData[]): Observable<TaskData[]> {
+
+    const dialogRef = this.dialog.open(ShuffleTasksModalComponent, {
+      data: {
+        tasks,
       },
     });
 

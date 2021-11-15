@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { Chapter, ChapterOnCreate, MainNavData, MainNavDataOnCreate, TestData, TheoryData, TheoryDataOnCreate } from 'src/app/shared/interfaces';
+import { Chapter, ChapterOnCreate, Comment, MainNavData, MainNavDataOnCreate, TestData, TheoryData, TaskData } from 'src/app/shared/interfaces';
 
 export interface NewChaptersData {
   position: string
@@ -72,12 +72,23 @@ export class ContentBuilderService {
     //http request
 
     //temporary
-    return of(theoryData).pipe(delay(3000))
+    return of(theoryData).pipe(delay(2000))
   }
 
   public renewTestsData(testsData: TestData[]): Observable<TestData[]> {
-    return of(testsData).pipe(delay(3000))
+    // http request
+    return of(testsData).pipe(delay(2000))
   }
 
+  public renewPracticeData(tasks: TaskData[]): Observable<TaskData[]> {
+    // http request
 
+    return of(tasks).pipe(delay(1500))
+  }
+
+  public renewComments(comments: Comment[]): Observable<Comment[]> {
+    // http request
+
+    return of(comments).pipe(delay(1500))
+  }
 }

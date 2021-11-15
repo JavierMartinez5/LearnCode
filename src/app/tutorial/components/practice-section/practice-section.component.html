@@ -1,4 +1,4 @@
-<div class="section-container">
+<!-- <div class="section-container">
     <mat-stepper orientation="vertical">
       <mat-step *ngFor="let task of practiceData; let i = index">
         <ng-template matStepLabel
@@ -59,4 +59,64 @@
       </mat-step>
     </mat-stepper>
   </div>
-  
+   -->
+
+<div class="section-container">
+  <div class="flex column max-width">
+
+    <div
+      *ngIf="!practiceData.length"
+      class="flex content-center text-center v-center"
+      style="height: 200px; width: 100%"
+    >
+      <h2>No content on this page</h2>
+    </div>
+
+    <mat-stepper *ngIf="practiceData.length" orientation="vertical">
+      <mat-step *ngFor="let task of practiceData; let i = index">
+        <ng-template matStepLabel>
+          <div class="flex v-center">
+            <div>Тест {{ i + 1 }}.</div>
+            <quill-view-html
+              [content]="task.taskText.slice(0, 40)"
+            ></quill-view-html
+            >...
+          </div>
+        </ng-template>
+        <mat-tab-group mat-align-tabs="center">
+          <mat-tab label="Завдання">
+            <div>
+              <app-practice-task [task]="task"></app-practice-task>
+            </div>
+
+            <div class="btn-container">
+              <button
+                *ngIf="i !== practiceData.length - 1"
+                mat-button
+                matStepperNext
+              >
+                Далі
+              </button>
+            </div>
+          </mat-tab>
+          <mat-tab label="Відповідь">
+            <app-practice-answer [task]="task"></app-practice-answer>
+
+            <div class="btn-container">
+              <button
+                *ngIf="i !== practiceData.length - 1"
+                mat-button
+                matStepperNext
+              >
+                Далі
+              </button>
+            </div>
+          </mat-tab>
+          <mat-tab label="Коментарі">
+            <app-comments-block [taskId]="task.id"></app-comments-block>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>

@@ -1,58 +1,122 @@
 <div class="section-container">
-    <mat-stepper orientation="vertical">
-      <mat-step *ngFor="let task of practiceData; let i = index">
-        <ng-template matStepLabel
-          >Завдання {{ i + 1 }}. {{ task.taskText.slice(0, 30) }}...</ng-template
+  <div class="flex column max-width">
+    <div class="dashboard-container flex v-center">
+      <div>
+        <button
+          (click)="isCreateContentOpen = !isCreateContentOpen"
+          mat-raised-button
+          color="primary"
+          class="add-section"
+          [disabled]="isLoading"
         >
-  
+          Create task
+          <mat-icon>{{
+            isCreateContentOpen ? "remove_circle" : "add"
+          }}</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1 flex">
+        <button
+          [disabled]="isLoading"
+          matTooltip="Shuffle tests"
+          [matTooltipShowDelay]="toolTipDelay"
+          mat-mini-fab
+          (click)="shuffleTests()"
+        >
+          <mat-icon>shuffle</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1 flex">
+        <button
+          class="save-btn"
+          [disabled]="!isChanges"
+          matTooltip="Save all changes"
+          [matTooltipShowDelay]="toolTipDelay"
+          mat-mini-fab
+          (click)="isSaveChangesBlockOpen = !isSaveChangesBlockOpen"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+      <div class="ml-auto flex">
+        <button
+          [disabled]="isLoading"
+          (click)="deleteAllContent()"
+          matTooltip="Remove all tests"
+          [matTooltipShowDelay]="toolTipDelay"
+          mat-icon-button
+          color="warn"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <app-save-confirmation
+      [@fade]
+      *ngIf="isSaveChangesBlockOpen"
+      (onAction)="saveConfirmation($event)"
+    ></app-save-confirmation>
+
+    <app-create-tasks
+      [@fade]
+      *ngIf="isCreateContentOpen"
+      (onCreateTask)="onCreateTask($event)"
+    ></app-create-tasks>
+
+    <div *ngIf="!dataWithChanges.length" class="flex content-center text-center v-center" style="height: 200px; width: 100%;">
+      <h2>No content on this page</h2>
+    </div>
+
+    <mat-stepper *ngIf="dataWithChanges.length" orientation="vertical">
+      <mat-step *ngFor="let task of dataWithChanges; let i = index">
+        <ng-template matStepLabel>
+          <!-- Завдання {{ i + 1 }}. {{ task.taskText.slice(0, 30) }}... -->
+          <div class="flex v-center">
+            <div>Тест {{ i + 1 }}.</div>
+            <quill-view-html
+              [content]="task.taskText.slice(0, 40)"
+            ></quill-view-html
+            >...
+            <div class="ml-2">
+              <button
+                (click)="deleteTask(task.id)"
+                class="delete-btn mini-btn"
+                matTooltip="Delete task"
+                [matTooltipShowDelay]="toolTipDelay"
+                mat-icon-button
+                color="warn"
+              >
+                <mat-icon class="mini-icon">delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </ng-template>
         <mat-tab-group mat-align-tabs="center">
           <mat-tab label="Завдання">
-            <!-- <p class="task-title">{{ task.taskText }}</p>
-  
-            <mat-divider></mat-divider>
-            <div style="height: 350px">
-              <ngx-monaco-editor
-                style="height: 100%"
-                class="my-code-editor"
-                [options]="editorOptions"
-                [(ngModel)]="task.taskCode"
-              ></ngx-monaco-editor>
-            </div>
-  
-            <p
-              class="msg"
-              [ngClass]="{ 'wrong-answer': !isTrueAnswer }"
-              *ngIf="task.id === currentTaskId"
-            >
-              {{ isTrueAnswer ? "Правильно!" : "Неправильно!" }}
-            </p> -->
-
             <div>
               <app-practice-task [task]="task"></app-practice-task>
             </div>
 
             <div class="btn-container">
               <button
-                mat-stroked-button
-                color="primary"
-                (click)="checkCode(task.taskCode, task.id)"
+                *ngIf="i !== dataWithChanges.length - 1"
+                mat-button
+                matStepperNext
               >
-                Перевірити відповідь
-              </button>
-              <button *ngIf="i !== practiceData.length - 1" mat-button matStepperNext>
                 Далі
               </button>
             </div>
           </mat-tab>
           <mat-tab label="Відповідь">
-            <div class="answer-container">
-              <pre
-                *ngIf="task.answerCode"
-              ><code [highlight]="task.answerCode" [languages]="['javascript']"[lineNumbers]="true"></code></pre>
-            </div>
-  
+            <app-practice-answer [task]="task"></app-practice-answer>
+
             <div class="btn-container">
-              <button *ngIf="i !== practiceData.length - 1" mat-button matStepperNext>
+              <button
+                *ngIf="i !== dataWithChanges.length - 1"
+                mat-button
+                matStepperNext
+              >
                 Далі
               </button>
             </div>
@@ -64,4 +128,4 @@
       </mat-step>
     </mat-stepper>
   </div>
-  
+</div>

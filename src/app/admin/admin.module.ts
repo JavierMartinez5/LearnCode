@@ -28,7 +28,8 @@ import { CreateTestsComponent } from './shared/create-tests/create-tests.compone
 import { CreateTasksComponent } from './shared/create-tasks/create-tasks.component';
 import { PracticeTaskComponent } from './components/practice-task/practice-task.component';
 import { PracticeAnswerComponent } from './components/practice-answer/practice-answer.component';
-import { PracticeItemComponent } from './components/practice-item/practice-item.component';
+import { ShuffleTasksModalComponent } from './components/modals/shuffle-tasks-modal/shuffle-tasks-modal.component';
+import { SaveConfirmationComponent } from './shared/save-confirmation/save-confirmation.component';
 
 const routes: Routes = [
   { path: '', component: AdminLayoutComponent, children: [
@@ -65,7 +66,8 @@ const routes: Routes = [
     CreateTasksComponent,
     PracticeTaskComponent,
     PracticeAnswerComponent,
-    PracticeItemComponent,
+    ShuffleTasksModalComponent,
+    SaveConfirmationComponent,
   ],
   imports: [
     CommonModule,

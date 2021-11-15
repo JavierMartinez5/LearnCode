@@ -132,7 +132,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
         .getTheorySectionData(this.currentTutorialName, this.chapterId)
         .pipe(takeUntil(this.unsubscribeTutorial$))
         .subscribe((data: Array<TheoryData[]>) => {
-          console.log('theory')
           this.theoryData = data;
           this.lastChapterId = this.chapterId
           this.isDownloading = false
@@ -147,7 +146,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
         .getTestsSectionData(this.currentTutorialName, this.chapterId)
         .pipe(takeUntil(this.unsubscribeTutorial$))
         .subscribe((data: TestData[]) => {
-          console.log('tests')
           this.testsData = data;
           this.lastChapterId = this.chapterId
           this.isDownloading = false
@@ -162,7 +160,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
         .getPracticeSectionData(this.currentTutorialName, this.chapterId)
         .pipe(takeUntil(this.unsubscribeTutorial$))
         .subscribe((data: TaskData[]) => {
-          console.log('practice')
           this.practiceData = data;
           this.lastChapterId = this.chapterId
           this.isDownloading = false

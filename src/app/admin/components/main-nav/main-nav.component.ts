@@ -66,7 +66,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params: Params) => {
       this.currentTutorialName = params.language;
       this.unsubscribeTutorial$.next()
-      console.log('aaaaaaaaaaa')
 
       if (this.lastTutorialName !== this.currentTutorialName) {
         this.isComponentInited = false
@@ -221,7 +220,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
         .getTheorySectionData(this.currentTutorialName, this.chapterId)
         .pipe(takeUntil(this.unsubscribeTutorial$))
         .subscribe((data: Array<TheoryData[]>) => {
-          console.log('theory d')
           this.theoryData = data;
           this.lastChapterId = this.chapterId
           this.isDownloading = false
@@ -236,7 +234,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
         .getTestsSectionData(this.currentTutorialName, this.chapterId)
         .pipe(takeUntil(this.unsubscribeTutorial$))
         .subscribe((data: TestData[]) => {
-          console.log('tests')
           this.testsData = data;
           this.lastChapterId = this.chapterId
           this.isDownloading = false
@@ -251,7 +248,6 @@ export class MainNavComponent implements OnInit, OnDestroy {
         .getPracticeSectionData(this.currentTutorialName, this.chapterId)
         .pipe(takeUntil(this.unsubscribeTutorial$))
         .subscribe((data: TaskData[]) => {
-          console.log('practice')
           this.practiceData = data;
           this.lastChapterId = this.chapterId
           this.isDownloading = false

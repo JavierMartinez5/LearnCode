@@ -1,3 +1,4 @@
+
 <section>
   <div class="btn-container">
     <mat-button-toggle-group [(ngModel)]="inputMode" aria-label="Font Style">
@@ -132,12 +133,19 @@
   </div>
 
   <div
-    class="empty-comments flex"
-    *ngIf="!(comments | filterComments: searchValue).length"
+    class="empty-comments flex mt-2"
+    *ngIf="!(comments | filterComments: searchValue).length && !isLoading"
   >
-    <h3>
-      За запитом <span class="highlight">{{ searchValue }}</span> не знайдено
-      жодного коментаря
-    </h3>
+    <strong *ngIf="searchValue; else noCommentsLeft">За запитом <span class="highlight">{{ searchValue }}</span> не знайдено
+      жодного коментаря</strong>
+
+    <ng-template #noCommentsLeft>
+      <strong>No comments</strong>
+    </ng-template>
+    
+  </div>
+
+  <div class="flex content-center mt-2" *ngIf="!comments.length && isLoading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </div>
 </section>

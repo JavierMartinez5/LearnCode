@@ -14,6 +14,8 @@ import { TestsSectionComponent } from './tutorial/components/tests-section/tests
 import { PracticeSectionComponent } from './tutorial/components/practice-section/practice-section.component';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { CommentsBlockComponent } from './tutorial/components/comments-block/comments-block.component';
+import { PracticeAnswerComponent } from './tutorial/components/practice-answer/practice-answer.component';
+import { PracticeTaskComponent } from './tutorial/components/practice-task/practice-task.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { CommentsBlockComponent } from './tutorial/components/comments-block/com
     TheorySectionComponent,
     TestsSectionComponent,
     PracticeSectionComponent,
-    CommentsBlockComponent
+    CommentsBlockComponent,
+    PracticeTaskComponent,
+    PracticeAnswerComponent
   ],
   imports: [
     BrowserModule,

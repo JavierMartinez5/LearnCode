@@ -281,6 +281,14 @@ mat-panel-title {
   margin-bottom: 1rem;
 }
 
+.column {
+  flex-direction: column;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
 .ml-1 {
   margin-left: 1rem;
 }
@@ -297,8 +305,16 @@ mat-panel-title {
   margin-left: 2rem;
 }
 
+.pb-1 {
+  padding-bottom: 1rem;
+}
+
 .ml-auto {
   margin-left: auto;
+}
+
+.max-width {
+  width: 100%;
 }
 
 .height-15px {
@@ -337,6 +353,11 @@ mat-panel-title {
   border: 2px #4527A0 dashed;
   padding: 50px 0;
   margin-top: 25px;
+}
+
+.answer-loader {
+  max-width: 30px;
+  max-height: 30px;
 }
 
 .modal-mat-list:hover {

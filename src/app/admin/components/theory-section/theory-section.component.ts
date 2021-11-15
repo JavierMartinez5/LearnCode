@@ -132,14 +132,40 @@ export class TheorySectionComponent implements OnInit, OnDestroy {
     }, () => {this.isLoading = false})
   }
 
-  public openSaveChanges() {
-    this.isSaveChangesBlockOpen = true
-  }
-
   public removeChanges() {
     this.isSaveChangesBlockOpen = false
     this.isChanges = false
     this.dataWithChanges = JSON.parse(JSON.stringify(this.theoryData))
+  }
+
+  public saveConfirmation(action: string) {
+    if (action === 'save') {
+      this.isLoading = true
+      this.isSaveChangesBlockOpen = false
+      this.isChanges = false
+      this.isDragAndDrop = false
+    //request
+      this.contentBuilderService.renewTheoryData(this.dataWithChanges).pipe(take(1)).subscribe(theoryData => {
+        console.log('changes applied')
+        this.dataWithChanges = JSON.parse(JSON.stringify(theoryData))
+        this.theoryData = JSON.parse(JSON.stringify(theoryData))
+        this.isLoading = false
+      }, () => {this.isLoading = false})
+    }
+
+    if (action === 'remove') {
+      this.isSaveChangesBlockOpen = false
+      this.isChanges = false
+      this.dataWithChanges = JSON.parse(JSON.stringify(this.theoryData))
+    }
+
+    if (action === 'close') {
+      this.isSaveChangesBlockOpen = false
+    }
+  }
+
+  public openSaveChanges() {
+    this.isSaveChangesBlockOpen = true
   }
 
   public deleteAllContent() {

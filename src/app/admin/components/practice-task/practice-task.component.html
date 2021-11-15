@@ -1,10 +1,27 @@
 <div class="practice-task-container">
-  <div *ngIf="task.taskText; else createTaskText">
+  <div *ngIf="task.taskText">
     <div class="flex h-end">
-      <button (click)="editTaskInfo('taskText')" class="edit-btn mini-btn" matTooltip="Edit test" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="accent">
-        <mat-icon class="mini-icon">{{currentTool === 'taskText' ? 'close' : 'edit'}}</mat-icon>
+      <button
+        (click)="editTaskInfo('taskText')"
+        class="edit-btn mini-btn"
+        matTooltip="Edit test"
+        [matTooltipShowDelay]="toolTipDelay"
+        mat-icon-button
+        color="accent"
+      >
+        <mat-icon class="mini-icon">{{
+          currentTool === "taskText" ? "close" : "edit"
+        }}</mat-icon>
       </button>
-      <button (click)="deleteTaskInfo('taskText')" class="delete-btn mini-btn" matTooltip="Delete test" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="warn">
+      <button
+        [disabled]="currentTool === 'taskText'"
+        (click)="deleteTaskInfo('taskText')"
+        class="delete-btn mini-btn"
+        matTooltip="Delete test"
+        [matTooltipShowDelay]="toolTipDelay"
+        mat-icon-button
+        color="warn"
+      >
         <mat-icon class="mini-icon">delete</mat-icon>
       </button>
     </div>
@@ -12,107 +29,117 @@
     <div *ngIf="currentTool !== 'taskText'">
       <quill-view-html [content]="task.taskText"></quill-view-html>
     </div>
-
-    <div *ngIf="currentTool === 'taskText'">
-      <div>
-        <quill-editor
-          placeholder="Field for content"
-          [(ngModel)]="currentHandlingData"
-        ></quill-editor>
-      </div>
-
-      <div class="flex content-center mt-2">
-        <div>
-          <button (click)="createBlock()" mat-raised-button>Create block</button>
-        </div>
-        <div class="ml-1">
-          <button (click)="cancelCreateBlock()" mat-stroked-button>Cancel</button>
-        </div>
-      </div>
-    </div>
   </div>
-  
-  <ng-template #createTaskText>
-    <div *ngIf="!currentTool" class="flex content-center mt-1 mb-1">
+
+  <div>
+    <div
+      *ngIf="!currentTool && !task.taskText"
+      class="flex content-center mt-1 mb-1"
+    >
       <button (click)="currentTool = 'taskText'" mat-stroked-button>
         Create task text <mat-icon>ballot</mat-icon>
       </button>
     </div>
 
     <div *ngIf="currentTool === 'taskText'">
-      <div>
+      <div class="mt-2">
         <quill-editor
           placeholder="Field for content"
           [(ngModel)]="currentHandlingData"
         ></quill-editor>
       </div>
 
-      <div class="flex content-center mt-2">
+      <div class="flex content-center mt-2 mb-2">
         <div>
-          <button (click)="createBlock()" mat-raised-button>Create block</button>
+          <button (click)="createBlock()" mat-raised-button>
+            Create block
+          </button>
         </div>
         <div class="ml-1">
-          <button (click)="cancelCreateBlock()" mat-stroked-button>Cancel</button>
+          <button (click)="cancelCreateBlock()" mat-stroked-button>
+            Cancel
+          </button>
         </div>
       </div>
     </div>
-  </ng-template>
-  
-  
+  </div>
+
   <mat-divider></mat-divider>
-  
-  <div *ngIf="task.taskCode; else createTaskCode">
+
+  <div *ngIf="task.taskCode">
     <div class="flex h-end">
-      <button (click)="editTaskInfo('taskCode')" class="edit-btn mini-btn" matTooltip="Edit test" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="accent">
-        <mat-icon class="mini-icon">{{currentTool === 'taskCode' ? 'close' : 'edit'}}</mat-icon>
+      <button
+        (click)="editTaskInfo('taskCode')"
+        class="edit-btn mini-btn"
+        matTooltip="Edit test"
+        [matTooltipShowDelay]="toolTipDelay"
+        mat-icon-button
+        color="accent"
+      >
+        <mat-icon class="mini-icon">{{
+          currentTool === "taskCode" ? "close" : "edit"
+        }}</mat-icon>
       </button>
-      <button (click)="deleteTaskInfo('taskCode')" class="delete-btn mini-btn" matTooltip="Delete test" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="warn">
+      <button
+        [disabled]="currentTool === 'taskCode'"
+        (click)="deleteTaskInfo('taskCode')"
+        class="delete-btn mini-btn"
+        matTooltip="Delete test"
+        [matTooltipShowDelay]="toolTipDelay"
+        mat-icon-button
+        color="warn"
+      >
         <mat-icon class="mini-icon">delete</mat-icon>
       </button>
     </div>
 
-    <div *ngIf="currentTool !== 'taskCode'" style="height: 350px">
-      <ngx-monaco-editor
-      style="height: 100%"
-      class="my-code-editor"
-      [options]="editorOptions"
-      [(ngModel)]="task.taskCode"
-      ></ngx-monaco-editor>
-    </div>
-
-    <div *ngIf="currentTool === 'taskCode'">
-
+    <div *ngIf="currentTool !== 'taskCode'">
       <div style="height: 350px">
         <ngx-monaco-editor
         style="height: 100%"
         class="my-code-editor"
         [options]="editorOptions"
-        [(ngModel)]="currentHandlingData"
+        [(ngModel)]="task.taskCode"
         ></ngx-monaco-editor>
       </div>
-      
 
-      <div class="flex content-center mt-2">
-        <div>
-          <button (click)="createBlock()" mat-raised-button>Create block</button>
-        </div>
-        <div class="ml-1">
-          <button (click)="cancelCreateBlock()" mat-stroked-button>Cancel</button>
-        </div>
+      <div>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="checkAnswer()"
+        >
+          Перевірити відповідь
+        </button>
+      </div>
+
+      <div *ngIf="isLoadingAnswer">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="isShowAnswerMsg" class="showAnswerMsg text-center" [ngClass]="{'correctAnswer': isCorrectAnswer}">
+        <strong><p>{{isCorrectAnswer ? 'Correct' : 'Wrong'}} answer!</p></strong>
       </div>
     </div>
-    
   </div>
-  
-  <ng-template #createTaskCode>
-    <div *ngIf="!currentTool"  class="flex content-center mt-1 mb-1">
-      <button [disabled]="!task.taskText"  (click)="currentTool = 'taskCode'" mat-stroked-button>
+
+  <div>
+    <div
+      *ngIf="!currentTool && !task.taskCode"
+      class="flex content-center mt-1 mb-1"
+    >
+      <button
+        [disabled]="!task.taskText"
+        (click)="currentTool = 'taskCode'"
+        mat-stroked-button
+      >
         Create task code <mat-icon>code</mat-icon>
       </button>
     </div>
 
     <div *ngIf="currentTool === 'taskCode'">
-      <div style="height: 350px">
+      <p class="text-center"><strong>Creation code template</strong></p>
+      <div style="height: 350px" class="mt-1">
         <ngx-monaco-editor
           style="height: 100%"
           class="my-code-editor"
@@ -121,19 +148,21 @@
         ></ngx-monaco-editor>
       </div>
 
-      <div class="flex content-center mt-2">
+      <div class="flex content-center mt-1 mb-2">
         <div>
-          <button (click)="createBlock()" mat-raised-button>Create block</button>
+          <button (click)="createBlock()" mat-raised-button>
+            Create block
+          </button>
         </div>
         <div class="ml-1">
-          <button (click)="cancelCreateBlock()" mat-stroked-button>Cancel</button>
+          <button (click)="cancelCreateBlock()" mat-stroked-button>
+            Cancel
+          </button>
         </div>
       </div>
     </div>
-
-  </ng-template>
+  </div>
 </div>
-
 
 <!-- <p
   class="msg"
@@ -142,4 +171,3 @@
 >
   {{ isTrueAnswer ? "Правильно!" : "Неправильно!" }}
 </p> -->
-

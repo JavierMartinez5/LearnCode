@@ -1,1 +1,61 @@
-<p>practice-answer works!</p>
+<div>
+  <div>
+    <div *ngIf="task.answerCode" class="flex h-end">
+      <button
+        (click)="editTaskAnswer()"
+        class="edit-btn mini-btn"
+        matTooltip="Edit test"
+        [matTooltipShowDelay]="toolTipDelay"
+        mat-icon-button
+        color="accent"
+      >
+        <mat-icon class="mini-icon">{{
+          currentTool === "answerCode" ? "close" : "edit"
+        }}</mat-icon>
+      </button>
+      <button
+        (click)="deleteTaskAnswer()"
+        class="delete-btn mini-btn"
+        matTooltip="Delete test"
+        [matTooltipShowDelay]="toolTipDelay"
+        mat-icon-button
+        color="warn"
+        [disabled]="currentTool === 'answerCode'"
+      >
+        <mat-icon class="mini-icon">delete</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="currentTool !== 'answerCode'" class="answer-container">
+      <pre
+        *ngIf="task.answerCode"
+      ><code [highlight]="task.answerCode" [languages]="['javascript']"[lineNumbers]="true"></code></pre>
+    </div>
+  </div>
+
+  <div *ngIf="!task.answerCode && currentTool !== 'answerCode'" class="flex content-center mt-1 mb-1">
+    <button (click)="currentTool = 'answerCode'" mat-stroked-button>
+      Create answer code <mat-icon>code</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="currentTool === 'answerCode'">
+    <div style="height: 350px" class="mt-1">
+      <ngx-monaco-editor
+        style="height: 100%"
+        class="my-code-editor"
+        [options]="editorOptions"
+        [(ngModel)]="currentHandlingData"
+      ></ngx-monaco-editor>
+    </div>
+
+    <div class="flex content-center mt-2 mb-2">
+      <div>
+        <button (click)="createTaskAnswer()" mat-raised-button>Create block</button>
+      </div>
+      <div class="ml-1">
+        <button (click)="cancelCreateTaskAnswer()" mat-stroked-button>Cancel</button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+</div>

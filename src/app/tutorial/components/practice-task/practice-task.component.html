@@ -1,0 +1,44 @@
+<div class="practice-task-container">
+  <div>
+    <quill-view-html [content]="task.taskText"></quill-view-html>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div style="height: 350px">
+    <ngx-monaco-editor
+      style="height: 100%"
+      class="my-code-editor"
+      [options]="editorOptions"
+      [(ngModel)]="task.taskCode"
+    ></ngx-monaco-editor>
+  </div>
+
+  <div>
+    <button mat-stroked-button color="primary" (click)="checkAnswer()">
+      Перевірити відповідь
+    </button>
+  </div>
+
+  <div *ngIf="isLoadingAnswer">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+  
+  <div
+    *ngIf="isShowAnswerMsg"
+    class="showAnswerMsg text-center"
+    [ngClass]="{ correctAnswer: isCorrectAnswer }"
+  >
+    <strong
+      ><p>{{ isCorrectAnswer ? "Correct" : "Wrong" }} answer!</p></strong
+    >
+  </div>
+</div>
+
+<!-- <p
+  class="msg"
+  [ngClass]="{ 'wrong-answer': !isTrueAnswer }"
+  *ngIf="task.id === currentTaskId"
+>
+  {{ isTrueAnswer ? "Правильно!" : "Неправильно!" }}
+</p> -->

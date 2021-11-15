@@ -186,4 +186,33 @@ export class TestsSectionComponent implements OnInit {
     }
     this.currentEditingTestId = ''
   }
+
+  public saveConfirmation(action: string) {
+    if (action === 'save') {
+      this.isLoading = true
+      this.isSaveChangesBlockOpen = false
+      this.isChanges = false
+    
+      this.contentBuilderService.renewTestsData(this.dataWithChanges).pipe(take(1)).subscribe(testsData => {
+        console.log('tests changes applied')
+        this.dataWithChanges = JSON.parse(JSON.stringify(testsData))
+        this.testsData = JSON.parse(JSON.stringify(testsData))
+        this.testsThatWasConfirmed = []
+        this.clearTestsStatistic()
+        this.isLoading = false
+    }, () => {this.isLoading = false})
+    }
+
+    if (action === 'remove') {
+      this.dataWithChanges = JSON.parse(JSON.stringify(this.testsData))
+      this.isChanges = false
+      this.isSaveChangesBlockOpen = false
+      this.clearTestsStatistic()
+      this.testsThatWasConfirmed = []
+    }
+
+    if (action === 'close') {
+      this.isSaveChangesBlockOpen = false
+    }
+  }
 }

@@ -1,1 +1,37 @@
-<p>create-tasks works!</p>
+<div class="mt-2">
+  <mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Завдання">
+      <div>
+        <app-practice-task [task]="task"></app-practice-task>
+      </div>
+    </mat-tab>
+    <mat-tab label="Відповідь">
+      <app-practice-answer [task]="task"></app-practice-answer>
+    </mat-tab>
+  </mat-tab-group>
+
+  <div class="flex mt-2 clumn">
+    <div class="m0auto text-center">
+      <label id="radio-group-label">Place in :</label>
+      <div class="modal-radio-group">
+        <mat-radio-group [(ngModel)]="position" aria-label="Select an option" aria-labelledby="radio-group-label">
+          <mat-radio-button value="bottom">bottom</mat-radio-button>
+          <mat-radio-button class="ml-1" value="top">top</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="flex content-center mt-1">
+      <div>
+        <button [disabled]="!task.taskText || !task.answerCode" class="c-green" (click)="finishCreation()" mat-stroked-button>
+          Submit<mat-icon>note_add</mat-icon>
+        </button>
+      </div>
+      <div class="ml-1">
+        <button (click)="finishCreation(true)" mat-stroked-button color="warn">
+          Cancel <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

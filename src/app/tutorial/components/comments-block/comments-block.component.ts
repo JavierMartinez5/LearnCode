@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
 import { Comment, NewComment } from 'src/app/shared/interfaces';
 import { TutorialService } from 'src/app/shared/services/tutorial.service';
 
@@ -10,25 +11,32 @@ import { TutorialService } from 'src/app/shared/services/tutorial.service';
 })
 export class CommentsBlockComponent implements OnInit {
   @Input() public taskId!: string
-  public comments!: Comment[]
+  public comments: Comment[] = []
   public form!: FormGroup
-  public searchValue: string = ''
+  public searchValue = ''
 
   public inputMode: string = ''
-  public isSearchCommentBlock: boolean = false
-  public isCreateCommentBlock: boolean = false
+  public isSearchCommentBlock = false
+  public isCreateCommentBlock = false
+  public isLoading = false
 
   constructor(private tutorialService: TutorialService) { }
 
   ngOnInit(): void {
-    this.tutorialService.getCommentsBlockData(this.taskId).subscribe((data: Comment[]) => {
-      this.comments = data
-    }).unsubscribe()
+    this.downloadComments()
 
     this.form = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.minLength(5)]),
       content: new FormControl('', [Validators.required])
     })
+  }
+
+  private downloadComments() {
+    this.isLoading = true
+    this.tutorialService.getCommentsBlockData(this.taskId).pipe(take(1)).subscribe((data: Comment[]) => {
+      this.comments = data
+      this.isLoading = false
+    }, () => {this.isLoading = false})
   }
 
   public submit() {
@@ -48,6 +56,8 @@ export class CommentsBlockComponent implements OnInit {
   }
 
   hideInput(inputMode: string) {
+    this.searchValue = ''
+    
     if (inputMode === 'search') {
       this.isSearchCommentBlock = !this.isSearchCommentBlock
       this.isCreateCommentBlock = false

@@ -1,6 +1,10 @@
+<div class="mt-2" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
 <section>
   <div class="btn-container">
-    <mat-button-toggle-group [(ngModel)]="inputMode" aria-label="Font Style">
+    <mat-button-toggle-group [disabled]="isLoading" [(ngModel)]="inputMode" aria-label="Font Style">
       <mat-button-toggle value="comment" (click)="hideInput('comment')"
         >Додати коментарій
         <mat-icon>{{
@@ -18,10 +22,45 @@
         }}</mat-icon></mat-button-toggle
       >
     </mat-button-toggle-group>
+
+    <div class="save-btn-container">
+      <button [disabled]="!isChanges"  matTooltip="Save all changes" [matTooltipShowDelay]="toolTipDelay"  mat-mini-fab (click)="inputMode === 'save' ? inputMode = '' : inputMode = 'save'">
+        <mat-icon >save</mat-icon>
+      </button>
+    </div>
   </div>
 
   <div class="input-container" *ngIf="inputMode">
-    <mat-form-field appearance="legacy" *ngIf="inputMode === 'search'">
+
+    <div [@fade] class="alert-changes" *ngIf="inputMode === 'save'">
+      <div class="flex h-end height-15px">
+        <button (click)="inputMode = ''" matTooltip="Close" [matTooltipShowDelay]="toolTipDelay" mat-icon-button color="warn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="text-center flex content-center v-center">
+        <p><strong>Save changes on this page?</strong></p>
+      </div>
+      
+      <div class="flex content-center mb-1">
+        <div>
+          <button  (click)="saveChanges()" mat-stroked-button class="c-green">
+            Yes
+          </button>
+        </div>
+        <div class="ml-1">
+          <button
+          (click)="removeChanges()"
+          mat-stroked-button
+          color="warn"
+          >
+          Remove all changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field [@fade] appearance="legacy" *ngIf="inputMode === 'search'">
       <mat-label>Пошук коментарів за їх контентом або заголовком</mat-label>
       <mat-icon matSuffix>search</mat-icon>
       <input
@@ -31,7 +70,7 @@
       />
     </mat-form-field>
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <form [@fade] [formGroup]="form" (ngSubmit)="submit()">
       <div class="content" *ngIf="inputMode === 'comment'">
         <mat-form-field appearance="legacy">
           <mat-label>Заголовок або короткий опис</mat-label>
@@ -82,8 +121,23 @@
 </section>
 
 <section>
-  <div *ngFor="let comment of comments | filterComments: searchValue">
+  <div *ngFor="let comment of commentsWithChanges | filterComments: searchValue">
     <mat-card class="example-card">
+
+      <div class="flex h-end">
+        <button
+          (click)="deleteComment(comment.id)"
+          class="delete-btn mini-btn"
+          matTooltip="Delete test"
+          [matTooltipShowDelay]="toolTipDelay"
+          mat-icon-button
+          color="warn"
+          [disabled]="isLoading"
+        >
+          <mat-icon class="mini-icon">delete</mat-icon>
+        </button>
+      </div>
+
       <mat-card-header>
         <div
           mat-card-avatar
@@ -132,12 +186,20 @@
   </div>
 
   <div
-    class="empty-comments flex"
-    *ngIf="!(comments | filterComments: searchValue).length"
+    class="empty-comments flex mt-2"
+    *ngIf="!(commentsWithChanges | filterComments: searchValue).length && !isLoading"
   >
-    <h3>
-      За запитом <span class="highlight">{{ searchValue }}</span> не знайдено
-      жодного коментаря
-    </h3>
+    <strong *ngIf="searchValue; else noCommentsLeft">За запитом <span class="highlight">{{ searchValue }}</span> не знайдено
+      жодного коментаря</strong>
+
+    <ng-template #noCommentsLeft>
+      <strong>No comments</strong>
+    </ng-template>
+    
   </div>
+
+  <div class="flex content-center mt-2" *ngIf="!commentsWithChanges.length && isLoading">
+    <strong>Please wait. Loading...</strong>
+  </div>
+  
 </section>
