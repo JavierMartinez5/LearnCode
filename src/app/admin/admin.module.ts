@@ -39,7 +39,6 @@ const routes: Routes = [
     { path: 'tutorial/:language', component: AdminTutorialPageComponent, canActivate: [AuthGuard]},
     ] 
   },
-
 ];
 
 @NgModule({

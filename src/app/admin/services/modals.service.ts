@@ -38,7 +38,6 @@ export class ModalsService {
     });
 
     return dialogRef.afterClosed().pipe(switchMap((blocks: MainNavData[]) => {
-      console.log('uuuu', blocks)
       if (!blocks) return of(null)
       return this.contentBuilderService.shuffleBlocks(tutorialName, blocks)
     }))

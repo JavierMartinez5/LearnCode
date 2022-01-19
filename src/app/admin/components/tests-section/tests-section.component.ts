@@ -194,7 +194,6 @@ export class TestsSectionComponent implements OnInit {
       this.isChanges = false
     
       this.contentBuilderService.renewTestsData(this.dataWithChanges).pipe(take(1)).subscribe(testsData => {
-        console.log('tests changes applied')
         this.dataWithChanges = JSON.parse(JSON.stringify(testsData))
         this.testsData = JSON.parse(JSON.stringify(testsData))
         this.testsThatWasConfirmed = []

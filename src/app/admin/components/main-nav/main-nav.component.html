@@ -21,24 +21,6 @@
       <button (click)="shuffleBlocks()" class="edit-btn mini-btn" mat-icon-button >
         <mat-icon class="mini-icon">shuffle</mat-icon>
       </button>
-      <!-- <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title >
-                Add section
-              </mat-panel-title>
-              
-            </mat-expansion-panel-header>
-            
-            <mat-form-field class="example-full-width" appearance="fill">
-              <mat-label>Message</mat-label>
-              <input matInput #message maxlength="256" placeholder="Ex. I need help with...">
-              <mat-hint align="start"><strong>Don't disclose personal info</strong> </mat-hint>
-              <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
-            </mat-form-field>
-
-          </mat-expansion-panel>
-        </mat-accordion> -->
 
       <mat-nav-list>
         <div class="nav-content" *ngFor="let item of navData; let i=index">
